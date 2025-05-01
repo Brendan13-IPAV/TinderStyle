@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Australia Action Options Finder</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React and ReactDOM -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <!-- Babel for JSX -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.21.2/babel.min.js"></script>
+    <style>
+        /* Additional custom styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .card {
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Color scheme similar to IP Australia */
+        :root {
+            --primary-blue: #0b3d91;
+            --secondary-blue: #0099cc;
+            --accent-teal: #17b1b1;
+            --dark-text: #333333;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- Your React component code is included directly here -->
+    <script type="text/babel">
+        const App = () => {
+          // Questions with branching logic
+          // nextIfYes: question ID to show if user answers Yes
+          // nextIfNo: question ID to show if user answers No
+          // endpoint: if true, this is a terminal question leading to results
+          const questionTree = {
+            q1: {
+              id: 'q1',
+              text: 'Are you facing an intellectual property issue?',
+              nextIfYes: 'q2',
+              nextIfNo: 'q8',
+            },
+            q2: {
+              id: 'q2',
+              text: 'Do you own the intellectual property in question?',
+              nextIfYes: 'q3',
+              nextIfNo: 'q6',
+            },
+            q3: {
+              id: 'q3',
+              text: 'Has someone used your intellectual property without permission?',
+              nextIfYes: 'q4',
+              nextIfNo: 'q7',
+            },
+            q4: {
+              id: 'q4',
+              text: 'Is the intellectual property registered?',
+              nextIfYes: 'q5',
+              nextIfNo: 'q9',
+            },
+            q5: {
+              id: 'q5',
+              text: 'Has this occurred within Australia?',
+              nextIfYes: 'q10',
+              nextIfNo: 'q11',
+              endpoint: true,
+            },
+            q6: {
+              id: 'q6',
+              text: 'Are you interested in protecting your own IP?',
+              nextIfYes: 'q12',
+              nextIfNo: 'q13',
+              endpoint: true,
+            },
+            q7: {
+              id: 'q7',
+              text: 'Are you concerned about potential future infringement?',
+              nextIfYes: 'q14',
+              nextIfNo: 'q15',
+              endpoint: true,
+            },
+            q8: {
+              id: 'q8',
+              text: 'Are you looking to register intellectual property?',
+              nextIfYes: 'q16',
+              nextIfNo: 'q17',
+              endpoint: true,
+            },
+            q9: {
+              id: 'q9',
+              text: 'Would you like to register your intellectual property?',
+              nextIfYes: 'q18',
+              nextIfNo: 'q19',
+              endpoint: true,
+            },
+            q10: {
+              id: 'q10',
+              text: 'Have you attempted to resolve this directly?',
+              endpoint: true,
+            },
+            q11: {
+              id: 'q11',
+              text: 'Does the infringer have a presence in Australia?',
+              endpoint: true,
+            },
+            q12: {
+              id: 'q12',
+              text: 'Are you a creator or inventor of the IP?',
+              endpoint: true,
+            },
+            q13: {
+              id: 'q13',
+              text: 'Are you representing a client in this matter?',
+              endpoint: true,
+            },
+            q14: {
+              id: 'q14',
+              text: 'Is your IP in a competitive industry?',
+              endpoint: true,
+            },
+            q15: {
+              id: 'q15',
+              text: 'Are you seeking general information about IP rights?',
+              endpoint: true,
+            },
+            q16: {
+              id: 'q16',
+              text: 'Do you know which type of IP right applies to your situation?',
+              endpoint: true,
+            },
+            q17: {
+              id: 'q17',
+              text: 'Are you seeking information about international IP?',
+              endpoint: true,
+            },
+            q18: {
+              id: 'q18',
+              text: 'Are you interested in filing an application now?',
+              endpoint: true,
+            },
+            q19: {
+              id: 'q19',
+              text: 'Are you seeking alternative protections for your IP?',
+              endpoint: true,
+            },
+          };
+
+          // Result sets based on the path taken
+          // Define different result sets to show based on the endpoint reached
+          // Each action includes comparison metrics: cost, time, and resolution rate
+          const resultSets = {
+            q5: {
+              yes: [
+                {
+                  subtitle: 'DOMESTIC INFRINGEMENT',
+                  title: 'Document the infringement',
+                  description: 'Collect evidence of how your registered IP is being used without permission within Australia.',
+                  cost: "$500 - $2,000",
+                  time: "1-2 months",
+                  resolution: "75%"
+                },
+                {
+                  subtitle: 'LEGAL ACTION',
+                  title: 'Send a cease and desist letter',
+                  description: 'Formally notify the Australian-based infringer of your registered IP rights and request they stop the infringing activity.',
+                  cost: "$1,500 - $3,000",
+                  time: "2-4 months",
+                  resolution: "60%"
+                },
+                {
+                  subtitle: 'OFFICIAL PROCESS',
+                  title: 'File a complaint with IP Australia',
+                  description: 'Submit an official infringement report for your registered IP through the IP Australia portal.',
+                  cost: "$2,000 - $5,000",
+                  time: "6-12 months",
+                  resolution: "80%"
+                },
+                {
+                  subtitle: 'NEGOTIATION',
+                  title: 'Pursue licensing agreement',
+                  description: 'Work towards a mutually beneficial arrangement where the other party can legally use your IP for a fee.',
+                  cost: "$3,000 - $7,000",
+                  time: "3-6 months",
+                  resolution: "70%"
+                },
+                {
+                  subtitle: 'ALTERNATIVE RESOLUTION',
+                  title: 'Seek mediation services',
+                  description: 'Engage a neutral third party to help resolve the dispute outside of court proceedings.',
+                  cost: "$2,500 - $4,000",
+                  time: "2-3 months",
+                  resolution: "65%"
+                },
+              ],
+              no: [
+                {
+                  subtitle: 'INTERNATIONAL INFRINGEMENT',
+                  title: 'Consult with an IP attorney',
+                  description: 'Seek advice on international enforcement options for your registered IP rights.',
+                  cost: "$3,000 - $8,000",
+                  time: "1-3 months",
+                  resolution: "70%"
+                },
+                {
+                  subtitle: 'BORDER PROTECTION',
+                  title: 'File with Australian Border Force',
+                  description: 'Request seizure of imported goods that infringe on your registered IP rights.',
+                  cost: "$1,500 - $4,000",
+                  time: "4-8 months",
+                  resolution: "55%"
+                },
+                {
+                  subtitle: 'INTERNATIONAL PROCESS',
+                  title: 'Consider WIPO complaint procedures',
+                  description: 'Explore World Intellectual Property Organization dispute resolution for cross-border IP issues.',
+                  cost: "$5,000 - $15,000",
+                  time: "6-18 months",
+                  resolution: "65%"
+                },
+                {
+                  subtitle: 'LOCAL REPRESENTATIVE',
+                  title: 'Engage foreign counsel',
+                  description: 'Hire legal representation in the jurisdiction where the infringement is occurring.',
+                  cost: "$7,000 - $20,000",
+                  time: "6-12 months",
+                  resolution: "75%"
+                },
+                {
+                  subtitle: 'STRATEGIC APPROACH',
+                  title: 'Multi-jurisdictional planning',
+                  description: 'Develop a coordinated strategy to address infringement across multiple countries.',
+                  cost: "$10,000 - $25,000",
+                  time: "8-24 months",
+                  resolution: "80%"
+                },
+              ]
+            },
+            q6: {
+              yes: [
+                {
+                  subtitle: 'IP PROTECTION',
+                  title: 'Explore registration options',
+                  description: 'Learn about the different types of IP protection available for your creative or innovative work.',
+                  cost: "$200 - $500",
+                  time: "1-2 weeks",
+                  resolution: "90%"
+                },
+                {
+                  subtitle: 'PREPARATION',
+                  title: 'Prepare for IP application',
+                  description: 'Gather necessary documentation and information to support your IP registration application.',
+                  cost: "$500 - $2,000",
+                  time: "2-4 weeks",
+                  resolution: "85%"
+                },
+                {
+                  subtitle: 'PROFESSIONAL ASSISTANCE',
+                  title: 'Engage an IP attorney',
+                  description: 'Get expert help with preparing and filing your IP registration for the best chance of success.',
+                  cost: "$2,000 - $5,000",
+                  time: "1-3 months",
+                  resolution: "95%"
+                },
+                {
+                  subtitle: 'SELF-SERVICE',
+                  title: 'Use IP Australia online services',
+                  description: 'File your application directly through IP Australia's digital platform.',
+                  cost: "$250 - $1,000",
+                  time: "3-12 months",
+                  resolution: "70%"
+                },
+              ],
+              no: [
+                {
+                  subtitle: 'LEGAL ADVICE',
+                  title: 'Consult with a legal representative',
+                  description: 'Seek advice from an IP attorney regarding your specific circumstances and third-party IP.',
+                  cost: "$300 - $1,000",
+                  time: "1-2 weeks",
+                  resolution: "80%"
+                },
+                {
+                  subtitle: 'RISK ASSESSMENT',
+                  title: 'Conduct an IP risk analysis',
+                  description: 'Evaluate your potential exposure and develop strategies to minimize IP-related risks.',
+                  cost: "$1,500 - $4,000",
+                  time: "2-4 weeks",
+                  resolution: "75%"
+                },
+                {
+                  subtitle: 'CONTRACTUAL PROTECTION',
+                  title: 'Review relevant agreements',
+                  description: 'Examine existing contracts to understand IP ownership and usage rights.',
+                  cost: "$1,000 - $3,000",
+                  time: "1-3 weeks",
+                  resolution: "85%"
+                },
+              ],
+            },
+            default: [
+              {
+                subtitle: 'FIRST STEPS',
+                title: 'Understand your IP rights',
+                description: 'Learn about the different types of intellectual property and which might apply to your situation.',
+                cost: "$0 - $500",
+                time: "1-2 weeks",
+                resolution: "90%"
+              },
+              {
+                subtitle: 'LEGAL OPTION',
+                title: 'Consult with an IP professional',
+                description: 'Speak with an IP attorney or advisor who can provide guidance specific to your situation.',
+                cost: "$250 - $1,500",
+                time: "1-3 weeks",
+                resolution: "85%"
+              },
+              {
+                subtitle: 'OFFICIAL RESOURCES',
+                title: 'Access IP Australia resources',
+                description: 'Explore the official guides, tools and information available from IP Australia.',
+                cost: "$0",
+                time: "1-7 days",
+                resolution: "70%"
+              },
+              {
+                subtitle: 'EDUCATION',
+                title: 'Attend IP workshops or webinars',
+                description: 'Participate in educational events to better understand intellectual property concepts and protection.',
+                cost: "$0 - $300",
+                time: "1-2 days",
+                resolution: "75%"
+              },
+              {
+                subtitle: 'SELF-ASSESSMENT',
+                title: 'Complete IP Australia's diagnostic tools',
+                description: 'Use online assessment tools to identify your specific IP needs and options.',
+                cost: "$0",
+                time: "1-3 hours",
+                resolution: "65%"
+              },
+            ]
+          };
+
+          // State variables
+          const [currentQuestionId, setCurrentQuestionId] = React.useState('q1');
+          const [answers, setAnswers] = React.useState({});
+          const [pathTaken, setPathTaken] = React.useState([]);
+          const [showResults, setShowResults] = React.useState(false);
+          const [actionsList, setActionsList] = React.useState([]);
+
+          // Handle answering a question
+          const handleAnswer = (answer) => {
+            const currentQuestion = questionTree[currentQuestionId];
+            const updatedPathTaken = [...pathTaken, currentQuestionId];
+            const updatedAnswers = { ...answers, [currentQuestionId]: answer };
+            
+            setAnswers(updatedAnswers);
+            setPathTaken(updatedPathTaken);
+            
+            // Determine the next question based on the answer
+            const nextQuestionId = answer === 'yes' 
+              ? currentQuestion.nextIfYes 
+              : currentQuestion.nextIfNo;
+            
+            // Check if we've reached an endpoint
+            if (currentQuestion.endpoint || !nextQuestionId) {
+              // Determine which result set to show
+              let results;
+              if (resultSets[currentQuestionId] && resultSets[currentQuestionId][answer]) {
+                results = resultSets[currentQuestionId][answer];
+              } else {
+                results = resultSets.default;
+              }
+              
+              setActionsList(results);
+              setShowResults(true);
+            } else {
+              setCurrentQuestionId(nextQuestionId);
+            }
+          };
+
+          // Handle skipping a question
+          const handleSkip = () => {
+            const currentQuestion = questionTree[currentQuestionId];
+            
+            // Pick a default path for skipped questions (we'll choose the Yes path)
+            const nextQuestionId = currentQuestion.nextIfYes;
+            
+            if (currentQuestion.endpoint || !nextQuestionId) {
+              setActionsList(resultSets.default);
+              setShowResults(true);
+            } else {
+              setCurrentQuestionId(nextQuestionId);
+            }
+          };
+
+          // Reset the questionnaire
+          const resetQuestionnaire = () => {
+            setCurrentQuestionId('q1');
+            setAnswers({});
+            setPathTaken([]);
+            setShowResults(false);
+          };
+
+          // Count total questions for display purposes
+          const totalQuestions = Object.keys(questionTree).length;
+
+          return (
+            <div className="min-h-screen bg-gray-100">
+              {/* Header */}
+              <header className="bg-white border-b border-gray-200">
+                <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="mr-4">
+                      {/* Placeholder for Australian Government logo */}
+                      <div className="h-10 w-24 bg-gray-200 flex items-center justify-center text-xs text-gray-500">Logo</div>
+                    </div>
+                    <div className="text-xl font-bold text-blue-900">IP Australia</div>
+                  </div>
+                  <nav className="hidden md:flex space-x-6">
+                    <a href="#" className="text-gray-700 hover:text-blue-800">Home</a>
+                    <a href="#" className="text-gray-700 hover:text-blue-800">About IP Australia</a>
+                    <a href="#" className="text-gray-700 hover:text-blue-800">Learn about enforcement</a>
+                    <a href="#" className="text-gray-700 hover:text-blue-800">Search</a>
+                  </nav>
+                </div>
+              </header>
+
+              <main className="container mx-auto px-4 py-8">
+                {!showResults ? (
+                  <div className="max-w-2xl mx-auto">
+                    <h1 className="text-3xl font-bold text-blue-900 mb-8 text-center">IP Protection Questionnaire</h1>
+                    
+                    {/* Question Card */}
+                    <div className="bg-white rounded-lg shadow-lg overflow-hidden card">
+                      <div className="p-6">
+                        <div className="text-sm text-gray-500 mb-1">Question {pathTaken.length + 1} (Path: {pathTaken.join(' → ')})</div>
+                        <h2 className="text-2xl font-bold text-blue-900 mb-8">{questionTree[currentQuestionId].text}</h2>
+                        
+                        <div className="flex justify-between items-center">
+                          <button 
+                            onClick={() => handleAnswer('no')}
+                            className="px-8 py-3 bg-red-500 text-white font-semibold rounded-lg shadow hover:bg-red-600 transition"
+                          >
+                            No
+                          </button>
+                          
+                          <button 
+                            onClick={handleSkip}
+                            className="px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition"
+                          >
+                            Skip
+                          </button>
+                          
+                          <button 
+                            onClick={() => handleAnswer('yes')}
+                            className="px-8 py-3 bg-green-500 text-white font-semibold rounded-lg shadow hover:bg-green-600 transition"
+                          >
+                            Yes
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-blue-50 px-6 py-4">
+                        <div className="text-sm text-blue-800">
+                          Swipe right for Yes, left for No, or tap the buttons above
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="max-w-6xl mx-auto">
+                    <div className="flex justify-between items-center mb-8">
+                      <h1 className="text-3xl font-bold text-blue-900">Actions For Consideration</h1>
+                      <button 
+                        onClick={resetQuestionnaire}
+                        className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
+                      >
+                        Start Over
+                      </button>
+                    </div>
+                    
+                    <div className="bg-blue-50 p-4 rounded-lg mb-6">
+                      <h2 className="font-semibold text-blue-800">Your Path: {pathTaken.join(' → ')}</h2>
+                      <p className="text-blue-600 mt-1">Based on your responses, here are some possible actions for your consideration.</p>
+                    </div>
+                    
+                    {/* Results/Actions grid */}
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {actionsList.map((action, index) => (
+                        <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden card h-full flex flex-col">
+                          <div className="p-6 flex-grow">
+                            <div className="text-sm font-semibold text-blue-600 mb-1">{action.subtitle}</div>
+                            <h2 className="text-xl font-bold text-blue-900 mb-2">{action.title}</h2>
+                            <p className="text-gray-700 mb-4">{action.description}</p>
+                            
+                            {/* Comparison metrics */}
+                            <div className="mt-4 space-y-3">
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm text-gray-600">Estimated cost:</span>
+                                <span className="font-medium">{action.cost || "$1,000 - $5,000"}</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm text-gray-600">Estimated time:</span>
+                                <span className="font-medium">{action.time || "3-6 months"}</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="text-sm text-gray-600">Resolution rate:</span>
+                                <span className="font-medium">{action.resolution || "65%"}</span>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="bg-gray-50 px-6 py-3 flex justify-center">
+                            <button className="w-full px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition">
+                              Learn More
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </main>
+
+              {/* Footer */}
+              <footer className="bg-blue-900 text-white mt-16">
+                <div className="container mx-auto px-4 py-8">
+                  <div className="grid md:grid-cols-4 gap-8">
+                    <div>
+                      <h3 className="font-bold mb-4">IP Australia</h3>
+                      <ul className="space-y-2">
+                        <li><a href="#" className="hover:underline">Home</a></li>
+                        <li><a href="#" className="hover:underline">Our agency</a></li>
+                        <li><a href="#" className="hover:underline">Contact us</a></li>
+                        <li><a href="#" className="hover:underline">FAQs</a></li>
+                      </ul>
+                    </div>
+                    
+                    <div>
+                      <h3 className="font-bold mb-4">Navigator Tools</h3>
+                      <ul className="space-y-2">
+                        <li><a href="#" className="hover:underline">Facing infringement</a></li>
+                        <li><a href="#" className="hover:underline">Accused of infringement</a></li>
+                        <li><a href="#" className="hover:underline">Disagree with an IP Australia decision</a></li>
+                      </ul>
+                    </div>
+                    
+                    <div>
+                      <h3 className="font-bold mb-4">Tools & Resources</h3>
+                      <ul className="space-y-2">
+                        <li><a href="#" className="hover:underline">Find an existing registered right</a></li>
+                        <li><a href="#" className="hover:underline">Learn more about enforcement</a></li>
+                        <li><a href="#" className="hover:underline">View all enforcement options</a></li>
+                      </ul>
+                    </div>
+                    
+                    <div>
+                      <h3 className="font-bold mb-4">Provide Feedback</h3>
+                      <ul className="space-y-2">
+                        <li><a href="#" className="hover:underline">Send us an email</a></li>
+                        <li><a href="#" className="hover:underline">Fill out a feedback form</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                  
+                  <div className="border-t border-blue-800 mt-8 pt-6 text-sm text-blue-200">
+                    <p>We acknowledge the traditional owners of the country throughout Australia and their continuing connection to land, sea and community. We pay our respect to them and their cultures and to the elders past and present.</p>
+                    <div className="mt-4 flex flex-wrap gap-4">
+                      <a href="#" className="hover:underline">Privacy</a>
+                      <a href="#" className="hover:underline">Accessibility</a>
+                      <a href="#" className="hover:underline">Disclaimer</a>
+                      <a href="#" className="hover:underline">Security</a>
+                      <span className="ml-auto">© Commonwealth of Australia</span>
+                    </div>
+                  </div>
+                </div>
+              </footer>
+            </div>
+          );
+        };
+
+        // Render the React component to the DOM
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
