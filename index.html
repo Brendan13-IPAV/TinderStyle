@@ -3,625 +3,731 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IP Australia Action Options Finder</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>IP Australia Questionnaire</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
-        .card {
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        /* Header Styling */
+        header {
+            background-color: #005DAA;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            height: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            background-color: #005DAA;
+            height: 100%;
+            width: 0;
+            transition: width 0.5s ease;
+        }
+        
+        /* Question Card */
+        .question-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin: 30px auto;
+            max-width: 600px;
+            display: none;
+        }
+        
+        .question-text {
+            font-size: 18px;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+        
+        /* Button Styling */
+        .btn-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .btn-yes {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .btn-no {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .btn-skip {
+            background-color: #9e9e9e;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        /* Results Grid */
+        .results-section {
+            display: none;
+        }
+        
+        .results-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .results-header h2 {
+            color: #005DAA;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .results-header p {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        /* Action Card */
+        .action-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            padding: 20px;
             transition: transform 0.3s ease;
         }
-        .card:hover {
+        
+        .action-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+        
+        .card-subtitle {
+            color: #005DAA;
+            font-size: 14px;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #333;
+        }
+        
+        .card-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            font-size: 13px;
+            color: #777;
+        }
+        
+        .card-meta div {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .meta-label {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        
+        /* Restart Button */
+        .restart-btn {
+            display: block;
+            margin: 30px auto;
+            padding: 12px 30px;
+            background-color: #005DAA;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .restart-btn:hover {
+            background-color: #00488a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .results-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .question-card {
+                padding: 20px;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-100">
-    <div id="app">
-        <!-- Header -->
-        <header class="bg-white border-b border-gray-200">
-            <div class="container mx-auto px-4 py-4 flex items-center justify-between">
-                <div class="flex items-center">
-                    <div class="mr-4">
-                        <!-- Placeholder for Australian Government logo -->
-                        <div class="h-10 w-24 bg-gray-200 flex items-center justify-center text-xs text-gray-500">Logo</div>
-                    </div>
-                    <div class="text-xl font-bold text-blue-900">IP Australia</div>
-                </div>
-                <nav class="hidden md:flex space-x-6">
-                    <a href="#" class="text-gray-700 hover:text-blue-800">Home</a>
-                    <a href="#" class="text-gray-700 hover:text-blue-800">About IP Australia</a>
-                    <a href="#" class="text-gray-700 hover:text-blue-800">Learn about enforcement</a>
-                    <a href="#" class="text-gray-700 hover:text-blue-800">Search</a>
-                </nav>
+<body>
+    <header>
+        <h1>IP Australia Questionnaire</h1>
+        <p>Discover potential intellectual property actions for your situation</p>
+    </header>
+    
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress" id="progress-bar"></div>
+        </div>
+        
+        <div id="question-container"></div>
+        
+        <div class="results-section" id="results-section">
+            <div class="results-header">
+                <h2>Actions For Consideration</h2>
+                <p>Based on your responses, here are some potential actions you may wish to consider.</p>
             </div>
-        </header>
-
-        <main class="container mx-auto px-4 py-8">
-            <!-- Questions Section -->
-            <div id="questions-section" class="max-w-2xl mx-auto">
-                <h1 class="text-3xl font-bold text-blue-900 mb-8 text-center">IP Protection Questionnaire</h1>
-                
-                <!-- Question Card -->
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden card">
-                    <div class="p-6">
-                        <div class="text-sm text-gray-500 mb-1">Question <span id="question-number">1</span> <span id="path-display">(Path: )</span></div>
-                        <h2 id="question-text" class="text-2xl font-bold text-blue-900 mb-8">Are you facing an intellectual property issue?</h2>
-                        
-                        <div class="flex justify-between items-center">
-                            <button 
-                                id="no-button"
-                                class="px-8 py-3 bg-red-500 text-white font-semibold rounded-lg shadow hover:bg-red-600 transition"
-                            >
-                                No
-                            </button>
-                            
-                            <button 
-                                id="skip-button"
-                                class="px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition"
-                            >
-                                Skip
-                            </button>
-                            
-                            <button 
-                                id="yes-button"
-                                class="px-8 py-3 bg-green-500 text-white font-semibold rounded-lg shadow hover:bg-green-600 transition"
-                            >
-                                Yes
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-blue-50 px-6 py-4">
-                        <div class="text-sm text-blue-800">
-                            Swipe right for Yes, left for No, or tap the buttons above
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Results Section (hidden by default) -->
-            <div id="results-section" class="max-w-6xl mx-auto hidden">
-                <div class="flex justify-between items-center mb-8">
-                    <h1 class="text-3xl font-bold text-blue-900">Actions For Consideration</h1>
-                    <button 
-                        id="start-over-button"
-                        class="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition"
-                    >
-                        Start Over
-                    </button>
-                </div>
-                
-                <div class="bg-blue-50 p-4 rounded-lg mb-6">
-                    <h2 class="font-semibold text-blue-800">Your Path: <span id="result-path"></span></h2>
-                    <p class="text-blue-600 mt-1">Based on your responses, here are some possible actions for your consideration.</p>
-                </div>
-                
-                <!-- Results/Actions grid -->
-                <div id="results-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Action cards will be inserted here dynamically -->
-                </div>
-            </div>
-        </main>
-
-        <!-- Footer -->
-        <footer class="bg-blue-900 text-white mt-16">
-            <div class="container mx-auto px-4 py-8">
-                <div class="grid md:grid-cols-4 gap-8">
-                    <div>
-                        <h3 class="font-bold mb-4">IP Australia</h3>
-                        <ul class="space-y-2">
-                            <li><a href="#" class="hover:underline">Home</a></li>
-                            <li><a href="#" class="hover:underline">Our agency</a></li>
-                            <li><a href="#" class="hover:underline">Contact us</a></li>
-                            <li><a href="#" class="hover:underline">FAQs</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div>
-                        <h3 class="font-bold mb-4">Navigator Tools</h3>
-                        <ul class="space-y-2">
-                            <li><a href="#" class="hover:underline">Facing infringement</a></li>
-                            <li><a href="#" class="hover:underline">Accused of infringement</a></li>
-                            <li><a href="#" class="hover:underline">Disagree with an IP Australia decision</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div>
-                        <h3 class="font-bold mb-4">Tools & Resources</h3>
-                        <ul class="space-y-2">
-                            <li><a href="#" class="hover:underline">Find an existing registered right</a></li>
-                            <li><a href="#" class="hover:underline">Learn more about enforcement</a></li>
-                            <li><a href="#" class="hover:underline">View all enforcement options</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div>
-                        <h3 class="font-bold mb-4">Provide Feedback</h3>
-                        <ul class="space-y-2">
-                            <li><a href="#" class="hover:underline">Send us an email</a></li>
-                            <li><a href="#" class="hover:underline">Fill out a feedback form</a></li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="border-t border-blue-800 mt-8 pt-6 text-sm text-blue-200">
-                    <p>We acknowledge the traditional owners of the country throughout Australia and their continuing connection to land, sea and community. We pay our respect to them and their cultures and to the elders past and present.</p>
-                    <div class="mt-4 flex flex-wrap gap-4">
-                        <a href="#" class="hover:underline">Privacy</a>
-                        <a href="#" class="hover:underline">Accessibility</a>
-                        <a href="#" class="hover:underline">Disclaimer</a>
-                        <a href="#" class="hover:underline">Security</a>
-                        <span class="ml-auto">© Commonwealth of Australia</span>
-                    </div>
-                </div>
-            </div>
-        </footer>
+            <div class="results-grid" id="results-grid"></div>
+            <button class="restart-btn" id="restart-btn">Start Again</button>
+        </div>
     </div>
-
+    
     <script>
-        // Question tree with branching logic
-        const questionTree = {
-            q1: {
-                id: 'q1',
-                text: 'Are you facing an intellectual property issue?',
-                nextIfYes: 'q2',
-                nextIfNo: 'q8',
-            },
-            q2: {
-                id: 'q2',
-                text: 'Do you own the intellectual property in question?',
-                nextIfYes: 'q3',
-                nextIfNo: 'q6',
-            },
-            q3: {
-                id: 'q3',
-                text: 'Has someone used your intellectual property without permission?',
-                nextIfYes: 'q4',
-                nextIfNo: 'q7',
-            },
-            q4: {
-                id: 'q4',
-                text: 'Is the intellectual property registered?',
-                nextIfYes: 'q5',
-                nextIfNo: 'q9',
-            },
-            q5: {
-                id: 'q5',
-                text: 'Has this occurred within Australia?',
-                nextIfYes: 'q10',
-                nextIfNo: 'q11',
-                endpoint: true,
-            },
-            q6: {
-                id: 'q6',
-                text: 'Are you interested in protecting your own IP?',
-                nextIfYes: 'q12',
-                nextIfNo: 'q13',
-                endpoint: true,
-            },
-            q7: {
-                id: 'q7',
-                text: 'Are you concerned about potential future infringement?',
-                nextIfYes: 'q14',
-                nextIfNo: 'q15',
-                endpoint: true,
-            },
-            q8: {
-                id: 'q8',
-                text: 'Are you looking to register intellectual property?',
-                nextIfYes: 'q16',
-                nextIfNo: 'q17',
-                endpoint: true,
-            },
-            q9: {
-                id: 'q9',
-                text: 'Would you like to register your intellectual property?',
-                nextIfYes: 'q18',
-                nextIfNo: 'q19',
-                endpoint: true,
-            },
-            q10: {
-                id: 'q10',
-                text: 'Have you attempted to resolve this directly?',
-                endpoint: true,
-            },
-            q11: {
-                id: 'q11',
-                text: 'Does the infringer have a presence in Australia?',
-                endpoint: true,
-            },
-            q12: {
-                id: 'q12',
-                text: 'Are you a creator or inventor of the IP?',
-                endpoint: true,
-            },
-            q13: {
-                id: 'q13',
-                text: 'Are you representing a client in this matter?',
-                endpoint: true,
-            },
-            q14: {
-                id: 'q14',
-                text: 'Is your IP in a competitive industry?',
-                endpoint: true,
-            },
-            q15: {
-                id: 'q15',
-                text: 'Are you seeking general information about IP rights?',
-                endpoint: true,
-            },
-            q16: {
-                id: 'q16',
-                text: 'Do you know which type of IP right applies to your situation?',
-                endpoint: true,
-            },
-            q17: {
-                id: 'q17',
-                text: 'Are you seeking information about international IP?',
-                endpoint: true,
-            },
-            q18: {
-                id: 'q18',
-                text: 'Are you interested in filing an application now?',
-                endpoint: true,
-            },
-            q19: {
-                id: 'q19',
-                text: 'Are you seeking alternative protections for your IP?',
-                endpoint: true,
-            },
-        };
-
-        // Result sets based on the path taken
-        const resultSets = {
-            q5: {
-                yes: [
-                    {
-                        subtitle: 'DOMESTIC INFRINGEMENT',
-                        title: 'Document the infringement',
-                        description: 'Collect evidence of how your registered IP is being used without permission within Australia.',
-                        cost: "$500 - $2,000",
-                        time: "1-2 months",
-                        resolution: "75%"
-                    },
-                    {
-                        subtitle: 'LEGAL ACTION',
-                        title: 'Send a cease and desist letter',
-                        description: 'Formally notify the Australian-based infringer of your registered IP rights and request they stop the infringing activity.',
-                        cost: "$1,500 - $3,000",
-                        time: "2-4 months",
-                        resolution: "60%"
-                    },
-                    {
-                        subtitle: 'OFFICIAL PROCESS',
-                        title: 'File a complaint with IP Australia',
-                        description: 'Submit an official infringement report for your registered IP through the IP Australia portal.',
-                        cost: "$2,000 - $5,000",
-                        time: "6-12 months",
-                        resolution: "80%"
-                    },
-                    {
-                        subtitle: 'NEGOTIATION',
-                        title: 'Pursue licensing agreement',
-                        description: 'Work towards a mutually beneficial arrangement where the other party can legally use your IP for a fee.',
-                        cost: "$3,000 - $7,000",
-                        time: "3-6 months",
-                        resolution: "70%"
-                    },
-                    {
-                        subtitle: 'ALTERNATIVE RESOLUTION',
-                        title: 'Seek mediation services',
-                        description: 'Engage a neutral third party to help resolve the dispute outside of court proceedings.',
-                        cost: "$2,500 - $4,000",
-                        time: "2-3 months",
-                        resolution: "65%"
-                    },
-                ],
-                no: [
-                    {
-                        subtitle: 'INTERNATIONAL INFRINGEMENT',
-                        title: 'Consult with an IP attorney',
-                        description: 'Seek advice on international enforcement options for your registered IP rights.',
-                        cost: "$3,000 - $8,000",
-                        time: "1-3 months",
-                        resolution: "70%"
-                    },
-                    {
-                        subtitle: 'BORDER PROTECTION',
-                        title: 'File with Australian Border Force',
-                        description: 'Request seizure of imported goods that infringe on your registered IP rights.',
-                        cost: "$1,500 - $4,000",
-                        time: "4-8 months",
-                        resolution: "55%"
-                    },
-                    {
-                        subtitle: 'INTERNATIONAL PROCESS',
-                        title: 'Consider WIPO complaint procedures',
-                        description: 'Explore World Intellectual Property Organization dispute resolution for cross-border IP issues.',
-                        cost: "$5,000 - $15,000",
-                        time: "6-18 months",
-                        resolution: "65%"
-                    },
-                    {
-                        subtitle: 'LOCAL REPRESENTATIVE',
-                        title: 'Engage foreign counsel',
-                        description: 'Hire legal representation in the jurisdiction where the infringement is occurring.',
-                        cost: "$7,000 - $20,000",
-                        time: "6-12 months",
-                        resolution: "75%"
-                    },
-                    {
-                        subtitle: 'STRATEGIC APPROACH',
-                        title: 'Multi-jurisdictional planning',
-                        description: 'Develop a coordinated strategy to address infringement across multiple countries.',
-                        cost: "$10,000 - $25,000",
-                        time: "8-24 months",
-                        resolution: "80%"
-                    },
-                ]
-            },
-            q6: {
-                yes: [
-                    {
-                        subtitle: 'IP PROTECTION',
-                        title: 'Explore registration options',
-                        description: 'Learn about the different types of IP protection available for your creative or innovative work.',
-                        cost: "$200 - $500",
-                        time: "1-2 weeks",
-                        resolution: "90%"
-                    },
-                    {
-                        subtitle: 'PREPARATION',
-                        title: 'Prepare for IP application',
-                        description: 'Gather necessary documentation and information to support your IP registration application.',
-                        cost: "$500 - $2,000",
-                        time: "2-4 weeks",
-                        resolution: "85%"
-                    },
-                    {
-                        subtitle: 'PROFESSIONAL ASSISTANCE',
-                        title: 'Engage an IP attorney',
-                        description: 'Get expert help with preparing and filing your IP registration for the best chance of success.',
-                        cost: "$2,000 - $5,000",
-                        time: "1-3 months",
-                        resolution: "95%"
-                    },
-                    {
-                        subtitle: 'SELF-SERVICE',
-                        title: 'Use IP Australia online services',
-                        description: 'File your application directly through IP Australia's digital platform.',
-                        cost: "$250 - $1,000",
-                        time: "3-12 months",
-                        resolution: "70%"
-                    },
-                ],
-                no: [
-                    {
-                        subtitle: 'LEGAL ADVICE',
-                        title: 'Consult with a legal representative',
-                        description: 'Seek advice from an IP attorney regarding your specific circumstances and third-party IP.',
-                        cost: "$300 - $1,000",
-                        time: "1-2 weeks",
-                        resolution: "80%"
-                    },
-                    {
-                        subtitle: 'RISK ASSESSMENT',
-                        title: 'Conduct an IP risk analysis',
-                        description: 'Evaluate your potential exposure and develop strategies to minimize IP-related risks.',
-                        cost: "$1,500 - $4,000",
-                        time: "2-4 weeks",
-                        resolution: "75%"
-                    },
-                    {
-                        subtitle: 'CONTRACTUAL PROTECTION',
-                        title: 'Review relevant agreements',
-                        description: 'Examine existing contracts to understand IP ownership and usage rights.',
-                        cost: "$1,000 - $3,000",
-                        time: "1-3 weeks",
-                        resolution: "85%"
-                    },
-                ],
-            },
-            default: [
-                {
-                    subtitle: 'FIRST STEPS',
-                    title: 'Understand your IP rights',
-                    description: 'Learn about the different types of intellectual property and which might apply to your situation.',
-                    cost: "$0 - $500",
-                    time: "1-2 weeks",
-                    resolution: "90%"
-                },
-                {
-                    subtitle: 'LEGAL OPTION',
-                    title: 'Consult with an IP professional',
-                    description: 'Speak with an IP attorney or advisor who can provide guidance specific to your situation.',
-                    cost: "$250 - $1,500",
-                    time: "1-3 weeks",
-                    resolution: "85%"
-                },
-                {
-                    subtitle: 'OFFICIAL RESOURCES',
-                    title: 'Access IP Australia resources',
-                    description: 'Explore the official guides, tools and information available from IP Australia.',
-                    cost: "$0",
-                    time: "1-7 days",
-                    resolution: "70%"
-                },
-                {
-                    subtitle: 'EDUCATION',
-                    title: 'Attend IP workshops or webinars',
-                    description: 'Participate in educational events to better understand intellectual property concepts and protection.',
-                    cost: "$0 - $300",
-                    time: "1-2 days",
-                    resolution: "75%"
-                },
-                {
-                    subtitle: 'SELF-ASSESSMENT',
-                    title: 'Complete IP Australia's diagnostic tools',
-                    description: 'Use online assessment tools to identify your specific IP needs and options.',
-                    cost: "$0",
-                    time: "1-3 hours",
-                    resolution: "65%"
-                },
-            ]
-        };
-
-        // App state variables
-        let currentQuestionId = 'q1';
-        let answers = {};
-        let pathTaken = [];
-
-        // DOM element references
-        const questionsSection = document.getElementById('questions-section');
-        const resultsSection = document.getElementById('results-section');
-        const questionNumber = document.getElementById('question-number');
-        const pathDisplay = document.getElementById('path-display');
-        const questionText = document.getElementById('question-text');
-        const yesButton = document.getElementById('yes-button');
-        const noButton = document.getElementById('no-button');
-        const skipButton = document.getElementById('skip-button');
-        const startOverButton = document.getElementById('start-over-button');
-        const resultPath = document.getElementById('result-path');
-        const resultsGrid = document.getElementById('results-grid');
-
-        // Initialize the app
-        function initApp() {
-            // Set up event listeners
-            yesButton.addEventListener('click', () => handleAnswer('yes'));
-            noButton.addEventListener('click', () => handleAnswer('no'));
-            skipButton.addEventListener('click', handleSkip);
-            startOverButton.addEventListener('click', resetQuestionnaire);
-
-            // Display first question
-            updateQuestionDisplay();
-        }
-
-        // Update the question display
-        function updateQuestionDisplay() {
-            const currentQuestion = questionTree[currentQuestionId];
-            questionNumber.textContent = pathTaken.length + 1;
-            
-            if (pathTaken.length > 0) {
-                pathDisplay.textContent = `(Path: ${pathTaken.join(' → ')})`;
-            } else {
-                pathDisplay.textContent = '';
+        // Debug Mode
+        const DEBUG = true;
+        
+        function debugLog(message) {
+            if (DEBUG) {
+                console.log(`DEBUG: ${message}`);
             }
-            
-            questionText.textContent = currentQuestion.text;
         }
-
-        // Handle answering a question
-        function handleAnswer(answer) {
-            const currentQuestion = questionTree[currentQuestionId];
+        
+        // Question Data Structure with Branching Logic
+        const questions = [
+            {
+                id: 1,
+                text: "Do you have a new invention or technological solution?",
+                nextIfYes: 2,
+                nextIfNo: 3,
+                nextIfSkip: 2
+            },
+            {
+                id: 2,
+                text: "Is your invention related to a physical product?",
+                nextIfYes: 4,
+                nextIfNo: 5,
+                nextIfSkip: 4
+            },
+            {
+                id: 3,
+                text: "Do you have a new brand name, logo, or business identity?",
+                nextIfYes: 6,
+                nextIfNo: 7,
+                nextIfSkip: 6
+            },
+            {
+                id: 4,
+                text: "Have you disclosed your invention to others outside your organization?",
+                nextIfYes: 8,
+                nextIfNo: 9,
+                nextIfSkip: 8
+            },
+            {
+                id: 5,
+                text: "Is your technological solution software-based?",
+                nextIfYes: 10,
+                nextIfNo: 11,
+                nextIfSkip: 10
+            },
+            {
+                id: 6,
+                text: "Are you currently using this brand in the marketplace?",
+                nextIfYes: 12,
+                nextIfNo: 13,
+                nextIfSkip: 12
+            },
+            {
+                id: 7,
+                text: "Have you created original creative content (writing, art, music, etc.)?",
+                nextIfYes: 14,
+                nextIfNo: 15,
+                nextIfSkip: 14
+            },
+            {
+                id: 8,
+                text: "Was the disclosure made under a confidentiality agreement?",
+                nextIfYes: 16,
+                nextIfNo: 17,
+                nextIfSkip: 16
+            },
+            {
+                id: 9,
+                text: "Are you planning to commercialize your invention in the next 12 months?",
+                nextIfYes: 18,
+                nextIfNo: 19,
+                nextIfSkip: 18
+            },
+            {
+                id: 10,
+                text: "Does your software solve a technical problem in a unique way?",
+                nextIfYes: 20,
+                nextIfNo: 21,
+                nextIfSkip: 20
+            },
+            {
+                id: 11,
+                text: "Is your invention in a competitive market with many similar products?",
+                nextIfYes: 22,
+                nextIfNo: 23,
+                nextIfSkip: 22
+            },
+            {
+                id: 12,
+                text: "Have you checked if similar trademarks already exist?",
+                nextIfYes: 24,
+                nextIfNo: 25,
+                nextIfSkip: 24
+            },
+            {
+                id: 13,
+                text: "Do you plan to expand your business internationally in the future?",
+                nextIfYes: 26,
+                nextIfNo: 27,
+                nextIfSkip: 26
+            },
+            {
+                id: 14,
+                text: "Is your creative content intended for commercial use?",
+                nextIfYes: 28,
+                nextIfNo: 29,
+                nextIfSkip: 28
+            },
+            {
+                id: 15,
+                text: "Do you have confidential business information that gives you a competitive advantage?",
+                nextIfYes: 30,
+                nextIfNo: null,
+                nextIfSkip: 30
+            }
+        ];
+        
+        // Possible Actions for Consideration
+        const actions = [
+            {
+                id: 1,
+                subtitle: "Patent Protection",
+                title: "File a Provisional Patent Application",
+                description: "Secure a priority date for your invention while giving yourself 12 months to decide on proceeding with a standard patent application.",
+                cost: "$2,000 - $5,000",
+                time: "1-2 months",
+                resolutionRate: "High for securing a priority date",
+                triggers: [2, 4, 9, 11]
+            },
+            {
+                id: 2,
+                subtitle: "Patent Protection",
+                title: "File a Standard Patent Application",
+                description: "Obtain comprehensive protection for your invention for up to 20 years in Australia.",
+                cost: "$8,000 - $15,000",
+                time: "3-5 years",
+                resolutionRate: "Moderate (50-60%)",
+                triggers: [2, 4, 9, 18]
+            },
+            {
+                id: 3,
+                subtitle: "Patent Protection",
+                title: "File an Innovation Patent Application",
+                description: "Secure a faster, less expensive patent with an 8-year term for incremental innovations.",
+                cost: "$4,000 - $8,000",
+                time: "6-12 months",
+                resolutionRate: "Higher than standard patents (70-80%)",
+                triggers: [5, 10, 22]
+            },
+            {
+                id: 4,
+                subtitle: "Trademark Protection",
+                title: "File a Trademark Application",
+                description: "Protect your brand identity including name, logo, slogan, or other distinctive elements in Australia.",
+                cost: "$1,500 - $3,000",
+                time: "7-9 months",
+                resolutionRate: "High (75-85% if distinctive)",
+                triggers: [3, 6, 12]
+            },
+            {
+                id: 5,
+                subtitle: "International Protection",
+                title: "File an International Patent Application (PCT)",
+                description: "Secure the option to file patents in multiple countries within 30 months of your first filing.",
+                cost: "$10,000 - $20,000",
+                time: "30-31 months before national phase",
+                resolutionRate: "Varies by country",
+                triggers: [9, 13, 26]
+            },
+            {
+                id: 6,
+                subtitle: "Trademark Strategy",
+                title: "Conduct a Comprehensive Trademark Search",
+                description: "Identify potential conflicts before filing your trademark application to avoid rejection or legal issues.",
+                cost: "$800 - $2,000",
+                time: "1-2 weeks",
+                resolutionRate: "N/A (search service)",
+                triggers: [3, 13, 25]
+            },
+            {
+                id: 7,
+                subtitle: "IP Strategy",
+                title: "Develop a Trade Secret Protection Plan",
+                description: "Implement protocols and agreements to protect valuable confidential business information.",
+                cost: "$2,000 - $5,000",
+                time: "1-2 months",
+                resolutionRate: "High if properly implemented",
+                triggers: [15, 30]
+            },
+            {
+                id: 8,
+                subtitle: "Software Protection",
+                title: "Register Copyright for Software Code",
+                description: "Establish evidence of ownership for your software's code and prevent direct copying.",
+                cost: "$500 - $1,500",
+                time: "2-4 months",
+                resolutionRate: "Very high for registration",
+                triggers: [5, 10, 14]
+            },
+            {
+                id: 9,
+                subtitle: "Creative Protection",
+                title: "Register Copyright for Creative Works",
+                description: "Document your ownership of creative works like writing, art, or music.",
+                cost: "$500 - $1,000",
+                time: "2-3 months",
+                resolutionRate: "Very high for registration",
+                triggers: [7, 14, 28]
+            },
+            {
+                id: 10,
+                subtitle: "IP Strategy",
+                title: "Consult with an IP Professional",
+                description: "Get personalized advice from a patent attorney or IP specialist on your specific situation.",
+                cost: "$500 - $1,000",
+                time: "1-2 weeks",
+                resolutionRate: "N/A (advisory service)",
+                triggers: [8, 17, 19, 21, 23, 27, 29]
+            }
+        ];
+        
+        // Application State
+        let currentQuestionIndex = 0;
+        let questionHistory = [];
+        let userResponses = {};
+        let totalQuestions = questions.length;
+        
+        // DOM Elements
+        const questionContainer = document.getElementById('question-container');
+        const progressBar = document.getElementById('progress-bar');
+        const resultsSection = document.getElementById('results-section');
+        const resultsGrid = document.getElementById('results-grid');
+        const restartBtn = document.getElementById('restart-btn');
+        
+        // Initialize the application
+        function initApp() {
+            debugLog('Initializing application');
+            currentQuestionIndex = 0;
+            questionHistory = [];
+            userResponses = {};
             
-            // Update path and answers
-            pathTaken.push(currentQuestionId);
-            answers[currentQuestionId] = answer;
+            // Hide results
+            resultsSection.style.display = 'none';
+            
+            // Show first question
+            displayQuestion(questions[0]);
+            
+            // Reset progress bar
+            updateProgressBar(0);
+        }
+        
+        // Display a question
+        function displayQuestion(question) {
+            debugLog(`Displaying question ${question.id}: "${question.text}"`);
+            
+            // Clear the question container
+            questionContainer.innerHTML = '';
+            
+            // Create question card
+            const questionCard = document.createElement('div');
+            questionCard.className = 'question-card';
+            questionCard.style.display = 'block';
+            
+            // Add question text
+            const questionText = document.createElement('div');
+            questionText.className = 'question-text';
+            questionText.textContent = question.text;
+            questionCard.appendChild(questionText);
+            
+            // Add button container
+            const btnContainer = document.createElement('div');
+            btnContainer.className = 'btn-container';
+            
+            // Create Yes button
+            const yesBtn = document.createElement('button');
+            yesBtn.className = 'btn btn-yes';
+            yesBtn.textContent = 'Yes';
+            yesBtn.addEventListener('click', () => handleResponse(question, 'yes'));
+            btnContainer.appendChild(yesBtn);
+            
+            // Create No button
+            const noBtn = document.createElement('button');
+            noBtn.className = 'btn btn-no';
+            noBtn.textContent = 'No';
+            noBtn.addEventListener('click', () => handleResponse(question, 'no'));
+            btnContainer.appendChild(noBtn);
+            
+            // Create Skip button
+            const skipBtn = document.createElement('button');
+            skipBtn.className = 'btn btn-skip';
+            skipBtn.textContent = 'Skip';
+            skipBtn.addEventListener('click', () => handleResponse(question, 'skip'));
+            btnContainer.appendChild(skipBtn);
+            
+            questionCard.appendChild(btnContainer);
+            questionContainer.appendChild(questionCard);
+            
+            // Animate the appearance
+            setTimeout(() => {
+                questionCard.style.opacity = '1';
+                questionCard.style.transform = 'translateY(0)';
+            }, 10);
+        }
+        
+        // Handle user response
+        function handleResponse(question, response) {
+            debugLog(`User responded "${response}" to question ${question.id}`);
+            
+            // Store response
+            userResponses[question.id] = response;
+            
+            // Add to question history
+            questionHistory.push(question.id);
             
             // Determine next question
-            const nextQuestionId = answer === 'yes' 
-                ? currentQuestion.nextIfYes 
-                : currentQuestion.nextIfNo;
+            let nextQuestionId;
+            if (response === 'yes') {
+                nextQuestionId = question.nextIfYes;
+            } else if (response === 'no') {
+                nextQuestionId = question.nextIfNo;
+            } else { // skip
+                nextQuestionId = question.nextIfSkip;
+            }
             
-            // Check if we've reached an endpoint
-            if (currentQuestion.endpoint || !nextQuestionId) {
-                showResults(currentQuestionId, answer);
+            // Update progress
+            updateProgressBar((questionHistory.length / totalQuestions) * 100);
+            
+            // Check if we have a next question
+            if (nextQuestionId) {
+                const nextQuestion = questions.find(q => q.id === nextQuestionId);
+                if (nextQuestion) {
+                    displayQuestion(nextQuestion);
+                } else {
+                    showResults();
+                }
             } else {
-                currentQuestionId = nextQuestionId;
-                updateQuestionDisplay();
+                showResults();
             }
         }
-
-        // Handle skipping a question
-        function handleSkip() {
-            const currentQuestion = questionTree[currentQuestionId];
-            
-            // Choose Yes path for skipped questions
-            const nextQuestionId = currentQuestion.nextIfYes;
-            
-            if (currentQuestion.endpoint || !nextQuestionId) {
-                showResults(currentQuestionId, 'yes');
-            } else {
-                currentQuestionId = nextQuestionId;
-                updateQuestionDisplay();
-            }
+        
+        // Update progress bar
+        function updateProgressBar(percentage) {
+            debugLog(`Updating progress bar to ${percentage}%`);
+            progressBar.style.width = `${percentage}%`;
         }
-
-        // Show results based on the path taken
-        function showResults(endpointId, finalAnswer) {
-            // Determine which result set to show
-            let actionsList;
-            if (resultSets[endpointId] && resultSets[endpointId][finalAnswer]) {
-                actionsList = resultSets[endpointId][finalAnswer];
-            } else {
-                actionsList = resultSets.default;
-            }
+        
+        // Show results based on responses
+        function showResults() {
+            debugLog('Showing results');
             
-            // Display the path taken
-            resultPath.textContent = pathTaken.join(' → ');
+            // Hide questions
+            questionContainer.innerHTML = '';
             
-            // Clear any existing results
+            // Show results section
+            resultsSection.style.display = 'block';
+            
+            // Clear previous results
             resultsGrid.innerHTML = '';
             
-            // Create action cards
-            actionsList.forEach(action => {
-                const card = document.createElement('div');
-                card.className = "bg-white rounded-lg shadow-lg overflow-hidden card h-full flex flex-col";
-                
-                card.innerHTML = `
-                    <div class="p-6 flex-grow">
-                        <div class="text-sm font-semibold text-blue-600 mb-1">${action.subtitle}</div>
-                        <h2 class="text-xl font-bold text-blue-900 mb-2">${action.title}</h2>
-                        <p class="text-gray-700 mb-4">${action.description}</p>
-                        
-                        <div class="mt-4 space-y-3">
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Estimated cost:</span>
-                                <span class="font-medium">${action.cost}</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Estimated time:</span>
-                                <span class="font-medium">${action.time}</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-600">Resolution rate:</span>
-                                <span class="font-medium">${action.resolution}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 px-6 py-3 flex justify-center">
-                        <button class="w-full px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition">
-                            Learn More
-                        </button>
-                    </div>
-                `;
-                
-                resultsGrid.appendChild(card);
+            // Determine applicable actions based on trigger questions
+            const applicableActions = actions.filter(action => {
+                return action.triggers.some(triggerId => {
+                    // Check if user answered "yes" to any trigger question
+                    return userResponses[triggerId] === 'yes';
+                });
             });
             
-            // Hide questions, show results
-            questionsSection.classList.add('hidden');
-            resultsSection.classList.remove('hidden');
-        }
-
-        // Reset the questionnaire
-        function resetQuestionnaire() {
-            currentQuestionId = 'q1';
-            answers = {};
-            pathTaken = [];
+            // If no applicable actions, add a default action
+            if (applicableActions.length === 0) {
+                debugLog('No applicable actions found, adding default consultation action');
+                applicableActions.push(actions.find(action => action.id === 10)); // Consultation action
+            }
             
-            // Update display
-            updateQuestionDisplay();
-            
-            // Show questions, hide results
-            questionsSection.classList.remove('hidden');
-            resultsSection.classList.add('hidden');
+            // Render action cards
+            applicableActions.forEach(action => {
+                renderActionCard(action);
+            });
         }
-
-        // Initialize when the page loads
-        document.addEventListener('DOMContentLoaded', initApp);
+        
+        // Render an action card
+        function renderActionCard(action) {
+            debugLog(`Rendering action card for "${action.title}"`);
+            
+            const card = document.createElement('div');
+            card.className = 'action-card';
+            
+            const subtitle = document.createElement('div');
+            subtitle.className = 'card-subtitle';
+            subtitle.textContent = action.subtitle;
+            card.appendChild(subtitle);
+            
+            const title = document.createElement('div');
+            title.className = 'card-title';
+            title.textContent = action.title;
+            card.appendChild(title);
+            
+            const description = document.createElement('div');
+            description.className = 'card-description';
+            description.textContent = action.description;
+            card.appendChild(description);
+            
+            const meta = document.createElement('div');
+            meta.className = 'card-meta';
+            
+            const costDiv = document.createElement('div');
+            const costLabel = document.createElement('span');
+            costLabel.className = 'meta-label';
+            costLabel.textContent = 'Est. Cost';
+            const costValue = document.createElement('span');
+            costValue.textContent = action.cost;
+            costDiv.appendChild(costLabel);
+            costDiv.appendChild(costValue);
+            
+            const timeDiv = document.createElement('div');
+            const timeLabel = document.createElement('span');
+            timeLabel.className = 'meta-label';
+            timeLabel.textContent = 'Est. Time';
+            const timeValue = document.createElement('span');
+            timeValue.textContent = action.time;
+            timeDiv.appendChild(timeLabel);
+            timeDiv.appendChild(timeValue);
+            
+            const successDiv = document.createElement('div');
+            const successLabel = document.createElement('span');
+            successLabel.className = 'meta-label';
+            successLabel.textContent = 'Resolution Rate';
+            const successValue = document.createElement('span');
+            successValue.textContent = action.resolutionRate;
+            successDiv.appendChild(successLabel);
+            successDiv.appendChild(successValue);
+            
+            meta.appendChild(costDiv);
+            meta.appendChild(timeDiv);
+            meta.appendChild(successDiv);
+            
+            card.appendChild(meta);
+            
+            resultsGrid.appendChild(card);
+        }
+        
+        // Event Listeners
+        restartBtn.addEventListener('click', () => {
+            debugLog('Restarting application');
+            initApp();
+        });
+        
+        // Initialize the app on load
+        window.addEventListener('load', initApp);
     </script>
 </body>
 </html>
