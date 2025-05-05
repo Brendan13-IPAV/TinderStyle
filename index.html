@@ -858,8 +858,8 @@ const filterQuestions = [
         text: "Are you responding to an issue of suspected or accused infringment?",
         filterProperty: "Response Type",
         filterValue: ["Accused", "Enforcement"],
-        // filterProperty: "Overtitle",
-        // filterValue: ["letter of demand", "Informal contact", "IP attorney"], 
+        filterProperty: "Overtitle",
+        filterValue: ["letter of demand", "Informal contact", "IP attorney"], 
         expectedAnswer: "Yes"
     },
     {
@@ -1172,8 +1172,8 @@ function generateFilterStatement(questionIndex, answer) {
     switch (questionIndex) {
         case 0: // Are you responding to an issue of suspected or accused infringment?
             return answer === 'Yes' 
-                ? 'Options which help respond to accusations of infringement' 
-                : 'Options which do not involve responding to accusations of infringement';
+                ? 'Options which help respond to suspected infringement' 
+                : 'Options which are proactive';
         case 1: // Are goods relating to your trade mark being imported into Australia?
             return answer === 'Yes' 
                 ? 'Options which address imported goods issues' 
@@ -1184,7 +1184,7 @@ function generateFilterStatement(questionIndex, answer) {
                 : 'Options which do not involve online marketplaces';
         case 3: // Has someone applied for a trade mark that is similar to yours?
             return answer === 'Yes' 
-                ? 'Options which challenge similar trade mark applications' 
+                ? 'Options which challenge trade mark applications' 
                 : 'Options which do not involve challenging trade marks';
         case 4: // Can you identify or contact the other party?
             return answer === 'Yes' 
