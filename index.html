@@ -1455,29 +1455,23 @@ const filterQuestions = [
             }
         }
 
- // Function to handle user responses to questions
-function handleQuestionResponse(response) {
-    // Record the response
-    userResponses[currentQuestionIndex] = response;
-    
-    // Filter options based on the response
-    filterOptions(currentQuestionIndex, response);
-    
-    // Generate and add filter statement if not skipped
-    const statement = generateFilterStatement(currentQuestionIndex, response);
-    if (statement) {
-        filterStatements.push(statement);
-        updateFilterList();
-    }
-    
-    // Shuffle active options before rendering
-    activeOptions = shuffleArray([...activeOptions]);
-    
-    // Rerender options with animation
-    renderOptions();
-    
-    // Rest of the function remains the same...
-}
+      // Function to handle user responses to questions
+         function handleQuestionResponse(response) {
+             // Record the response
+             userResponses[currentQuestionIndex] = response;
+             
+             // Filter options based on the response
+             filterOptions(currentQuestionIndex, response);
+             
+             // Generate and add filter statement if not skipped
+             const statement = generateFilterStatement(currentQuestionIndex, response);
+             if (statement) {
+                 filterStatements.push(statement);
+                 updateFilterList();
+             }
+             
+             // Rerender options with animation
+             renderOptions();
             
             // Move to the next question after a delay
             setTimeout(() => {
