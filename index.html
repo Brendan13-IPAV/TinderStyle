@@ -866,6 +866,12 @@ const filterQuestions = [
         filterValue: ["Takedown request", "Online protection", "Marketplace enforcement"],
         expectedAnswer: "Yes"
     },
+        {
+        text: "Has someone applied for a trade mark that is similar to yours?",
+        filterProperty: "Overtitle",
+        filterValue: ["Opposition", "revocation", "Challenge"],
+        expectedAnswer: "Yes"
+    },
     {
         text: "Can you identify or contact the other party?",
         filterProperty: "Overtitle",
@@ -918,6 +924,18 @@ const filterQuestions = [
         text: "Do you think a particular trade mark should not be registered?",
         filterProperty: "Response Type",
         filterValue: "Opposition",
+        expectedAnswer: "Yes"
+    },
+        {
+        text: "Are you trying to defend against someone else's claim of infringement?",
+        filterProperty: "Response Type",
+        filterValue: ["Accused"],
+        expectedAnswer: "Yes"
+    },
+    {
+        text: "Are you trying to enforce your trade mark rights against someone else?",
+        filterProperty: "Response Type",
+        filterValue: ["Enforcement"],
         expectedAnswer: "Yes"
     },
     {
@@ -1437,23 +1455,29 @@ const filterQuestions = [
             }
         }
 
-        // Function to handle user responses to questions
-        function handleQuestionResponse(response) {
-            // Record the response
-            userResponses[currentQuestionIndex] = response;
-            
-            // Filter options based on the response
-            filterOptions(currentQuestionIndex, response);
-            
-            // Generate and add filter statement if not skipped
-            const statement = generateFilterStatement(currentQuestionIndex, response);
-            if (statement) {
-                filterStatements.push(statement);
-                updateFilterList();
-            }
-            
-            // Rerender options with animation
-            renderOptions();
+ // Function to handle user responses to questions
+function handleQuestionResponse(response) {
+    // Record the response
+    userResponses[currentQuestionIndex] = response;
+    
+    // Filter options based on the response
+    filterOptions(currentQuestionIndex, response);
+    
+    // Generate and add filter statement if not skipped
+    const statement = generateFilterStatement(currentQuestionIndex, response);
+    if (statement) {
+        filterStatements.push(statement);
+        updateFilterList();
+    }
+    
+    // Shuffle active options before rendering
+    activeOptions = shuffleArray([...activeOptions]);
+    
+    // Rerender options with animation
+    renderOptions();
+    
+    // Rest of the function remains the same...
+}
             
             // Move to the next question after a delay
             setTimeout(() => {
