@@ -1015,93 +1015,49 @@ const filterQuestions = [
             }
         }
         
-        // Function to remove a filter and reapply all remaining filters
-        function removeFilter(index) {
-            // Get the question index associated with this filter
-            const questionIndex = Object.keys(userResponses).find(key => 
-                generateFilterStatement(parseInt(key), userResponses[key]) === filterStatements[index]
-            );
-            
-            if (questionIndex) {
-                // Remove this response
-                delete userResponses[questionIndex];
-                
-                // Remove the filter statement
-                filterStatements.splice(index, 1);
-                
-                // Reset active options to all options
-                activeOptions = [...tradeMarkOptions];
-                
-                // Reapply all remaining filters
-                for (const [qIndex, response] of Object.entries(userResponses)) {
-                    filterOptionsWithoutCount(parseInt(qIndex), response);
-                }
-                
-                // Update the UI
-                updateFilterList();
-                renderOptions();
-                
-                // Find the first unanswered question
-                let nextQuestionIndex = 0;
-                while (nextQuestionIndex in userResponses && nextQuestionIndex < filterQuestions.length) {
-                    nextQuestionIndex++;
-                }
-                
-                // If we have more questions to ask
-                if (nextQuestionIndex < filterQuestions.length) {
-                    // Clear any completion message
-                    const completionMessage = document.getElementById('completion-message');
-                    if (completionMessage) {
-                        completionMessage.remove();
-                    }
-                    
-                    // We have more questions to ask, so show the question section again
-                    currentQuestionIndex = nextQuestionIndex;
-                    const questionSection = document.getElementById('question-section');
-                    if (questionSection) {
-                        questionSection.classList.remove('hidden');
-                        displayQuestion();
-                    }
-                } else if (activeOptions.length > 7) {
-                    // No more questions but still more than 7 options
-                    // Show a different completion message
-                    const newCompletionMessage = document.createElement('div');
-                    newCompletionMessage.className = 'question-sidebar';
-                    newCompletionMessage.id = 'completion-message';
-                    newCompletionMessage.innerHTML = `
-                        <div class="question-text">You've answered all available questions.</div>
-                        
-                        <div class="summary-indicator">
-                            ${activeOptions.length} likely relevant options to consider of ${tradeMarkOptions.length} total
-                        </div>
-                    `;
-                    
-                    const completionContainer = document.getElementById('completion-message-container');
-                    if (completionContainer) {
-                        completionContainer.innerHTML = '';
-                        completionContainer.appendChild(newCompletionMessage);
-                    }
-                } else {
-                    // 7 or fewer options
-                    const newCompletionMessage = document.createElement('div');
-                    newCompletionMessage.className = 'question-sidebar';
-                    newCompletionMessage.id = 'completion-message';
-                    newCompletionMessage.innerHTML = `
-                        <div class="question-text">That's enough filtering. It's time to evaluate the options yourself.</div>
-                        
-                        <div class="summary-indicator">
-                            ${activeOptions.length} likely relevant options to consider of ${tradeMarkOptions.length} total
-                        </div>
-                    `;
-                    
-                    const completionContainer = document.getElementById('completion-message-container');
-                    if (completionContainer) {
-                        completionContainer.innerHTML = '';
-                        completionContainer.appendChild(newCompletionMessage);
-                    }
-                }
-            }
+    // Function to remove a filter and reapply all remaining filters
+function removeFilter(index) {
+    // Get the question index associated with this filter
+    const questionIndex = Object.keys(userResponses).find(key => 
+        generateFilterStatement(parseInt(key), userResponses[key]) === filterStatements[index]
+    );
+    
+    if (questionIndex) {
+        // Remove this response
+        delete userResponses[questionIndex];
+        
+        // Remove the filter statement
+        filterStatements.splice(index, 1);
+        
+        // Reset active options to all options
+        activeOptions = [...tradeMarkOptions];
+        
+        // Reapply all remaining filters
+        for (const [qIndex, response] of Object.entries(userResponses)) {
+            filterOptionsWithoutCount(parseInt(qIndex), response);
         }
+        
+        // Update the UI
+        updateFilterList();
+        renderOptions();
+        
+        // Display the question that was just unfiltered so user can answer it again
+        currentQuestionIndex = parseInt(questionIndex);
+        displayQuestion();
+        
+        // Make sure the question section is visible
+        const questionSection = document.getElementById('question-section');
+        if (questionSection) {
+            questionSection.classList.remove('hidden');
+        }
+        
+        // Remove any completion message that might be showing
+        const completionMessage = document.getElementById('completion-message');
+        if (completionMessage) {
+            completionMessage.remove();
+        }
+    }
+}
         
         // A version of filterOptions that doesn't return count (for reapplying filters)
         function filterOptionsWithoutCount(questionIndex, userAnswer) {
@@ -1441,87 +1397,86 @@ const filterQuestions = [
         }
 
         // Function to display the current question
-        function displayQuestion() {
-            const questionSection = document.getElementById('question-section');
-            
-            if (!questionSection) {
-                console.error('Question section element not found');
-                return;
-            }
-            
-            if (currentQuestionIndex >= filterQuestions.length || activeOptions.length <= 7) {
-                // Hide the question section if we're done with questions or have 7 or fewer options
-                questionSection.classList.add('hidden');
-                return;
-            }
-            
-            const questionElement = document.getElementById('current-question');
-            if (questionElement) {
-                questionElement.textContent = filterQuestions[currentQuestionIndex].text;
-            }
+// Function to display the current question
+function displayQuestion() {
+    const questionSection = document.getElementById('question-section');
+    
+    if (!questionSection) {
+        console.error('Question section element not found');
+        return;
+    }
+    
+    // Always ensure the question section is visible
+    questionSection.classList.remove('hidden');
+    
+    // If we've gone through all questions, show a message in the question container instead
+    if (currentQuestionIndex >= filterQuestions.length) {
+        const questionElement = document.getElementById('current-question');
+        if (questionElement) {
+            questionElement.textContent = "You've answered all available questions. You can remove filters to answer questions again.";
         }
+        
+        // Hide the buttons when there are no more questions
+        const buttonsContainer = document.querySelector('.question-buttons');
+        if (buttonsContainer) {
+            buttonsContainer.style.display = 'none';
+        }
+    } else if (activeOptions.length <= 7) {
+        // If we have 7 or fewer options, show a different message
+        const questionElement = document.getElementById('current-question');
+        if (questionElement) {
+            questionElement.textContent = "That's enough filtering. You can remove filters to answer questions again.";
+        }
+        
+        // Hide the buttons when we have few enough options
+        const buttonsContainer = document.querySelector('.question-buttons');
+        if (buttonsContainer) {
+            buttonsContainer.style.display = 'none';
+        }
+    } else {
+        // Show the current question and make sure buttons are visible
+        const questionElement = document.getElementById('current-question');
+        if (questionElement) {
+            questionElement.textContent = filterQuestions[currentQuestionIndex].text;
+        }
+        
+        // Make sure buttons are visible for answering
+        const buttonsContainer = document.querySelector('.question-buttons');
+        if (buttonsContainer) {
+            buttonsContainer.style.display = 'flex';
+        }
+    }
+    
+    // Update summary count
+    updateSummary();
+}
 
-      // Function to handle user responses to questions
-         function handleQuestionResponse(response) {
-             // Record the response
-             userResponses[currentQuestionIndex] = response;
-             
-             // Filter options based on the response
-             filterOptions(currentQuestionIndex, response);
-             
-             // Generate and add filter statement if not skipped
-             const statement = generateFilterStatement(currentQuestionIndex, response);
-             if (statement) {
-                 filterStatements.push(statement);
-                 updateFilterList();
-             }
-             
-             // Rerender options with animation
-             renderOptions();
-            
-            // Move to the next question after a delay
-            setTimeout(() => {
-                currentQuestionIndex++;
-                
-                // Check if we should continue with questions
-                if (activeOptions.length <= 7 || currentQuestionIndex >= filterQuestions.length) {
-                    const questionSection = document.getElementById('question-section');
-                    if (questionSection) {
-                        questionSection.classList.add('hidden');
-                    }
-                    
-                    // Show appropriate completion message
-                    let messageText = "";
-                    if (activeOptions.length <= 7) {
-                        messageText = "That's enough filtering. It's time to evaluate the options yourself.";
-                    } else {
-                        messageText = "You've answered all available questions.";
-                    }
-                    
-                    // Show completion message
-                    const completionMessage = document.createElement('div');
-                    completionMessage.className = 'question-sidebar';
-                    completionMessage.id = 'completion-message';
-                    completionMessage.innerHTML = `
-                        <div class="question-text">${messageText}</div>
-                        
-                        <div class="summary-indicator">
-                            ${activeOptions.length} likely relevant options to consider of ${tradeMarkOptions.length} total
-                        </div>
-                    `;
-                    
-                    const completionContainer = document.getElementById('completion-message-container');
-                    if (completionContainer) {
-                        // Clear any existing completion messages
-                        completionContainer.innerHTML = '';
-                        completionContainer.appendChild(completionMessage);
-                    }
-                } else {
-                    // Display the next question
-                    displayQuestion();
-                }
-            }, 500);
-        }
+// Function to handle user responses to questions
+function handleQuestionResponse(response) {
+    // Record the response
+    userResponses[currentQuestionIndex] = response;
+    
+    // Filter options based on the response
+    filterOptions(currentQuestionIndex, response);
+    
+    // Generate and add filter statement if not skipped
+    const statement = generateFilterStatement(currentQuestionIndex, response);
+    if (statement) {
+        filterStatements.push(statement);
+        updateFilterList();
+    }
+    
+    // Rerender options with animation
+    renderOptions();
+    
+    // Move to the next question after a delay
+    setTimeout(() => {
+        currentQuestionIndex++;
+        
+        // Always display the question container, even if it's showing a completion message
+        displayQuestion();
+    }, 500);
+}
 
         // Function to sort options
         function sortOptions(sortBy) {
