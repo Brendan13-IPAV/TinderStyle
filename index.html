@@ -3,731 +3,1218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IP Australia Questionnaire</title>
+    <title>Trade Mark First Response</title>
     <style>
-        /* Basic Reset */
-        * {
+        :root {
+            --dark-blue: #1D2939; /* Header background */
+            --teal: #55ABC9; /* Primary accent color */
+            --light-mint: #F6FAFC; /* Background color */
+            --border-color: #E4E7EC;
+            --text-primary: #1D2939;
+            --text-secondary: #667085;
+            --highlight: #787ABB; /* For highlighting selected items */
+            
+            /* IP Type Colors */
+            --patent-color: #1DA7AF;
+            --trade-mark-color: #DE4326;
+            --design-color: #84C98F;
+            --pbr-color: #F1AC1E;
+            --copyright-color: #787ABB;
+            --any-color: #667085;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text-primary);
+            background-color: var(--light-mint);
+            line-height: 1.5;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
         }
         
-        body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
-        }
-        
-        /* Header Styling */
-        header {
-            background-color: #005DAA;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        header h1 {
-            font-size: 24px;
-            margin-bottom: 8px;
-        }
-        
-        header p {
-            font-size: 16px;
-            opacity: 0.9;
-        }
-        
-        /* Main Container */
         .container {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px; /* Increased side padding */
         }
         
-        /* Progress Bar */
-        .progress-bar {
-            background-color: #e0e0e0;
-            border-radius: 10px;
-            height: 10px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-        
-        .progress {
-            background-color: #005DAA;
-            height: 100%;
-            width: 0;
-            transition: width 0.5s ease;
-        }
-        
-        /* Question Card */
-        .question-card {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            padding: 30px;
-            margin: 30px auto;
-            max-width: 600px;
-            display: none;
-        }
-        
-        .question-text {
-            font-size: 18px;
-            margin-bottom: 25px;
-            font-weight: 500;
-        }
-        
-        /* Button Styling */
-        .btn-container {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 30px;
-        }
-        
-        .btn {
-            padding: 12px 30px;
-            border-radius: 8px;
-            border: none;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 120px;
-        }
-        
-        .btn-yes {
-            background-color: #4CAF50;
-            color: white;
-        }
-        
-        .btn-no {
-            background-color: #f44336;
-            color: white;
-        }
-        
-        .btn-skip {
-            background-color: #9e9e9e;
-            color: white;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-        
-        .btn:active {
-            transform: translateY(0);
-        }
-        
-        /* Results Grid */
-        .results-section {
-            display: none;
-        }
-        
-        .results-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .results-header h2 {
-            color: #005DAA;
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        
-        .results-header p {
-            font-size: 16px;
-            color: #666;
-        }
-        
-        .results-grid {
+        .two-column-layout {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
         }
         
-        /* Action Card */
-        .action-card {
+        .sidebar {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+        
+        .question-sidebar {
             background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            padding: 20px;
-            transition: transform 0.3s ease;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(16, 24, 40, 0.15);
+            padding: 24px;
+            border-left: 3px solid var(--highlight);
+            margin-bottom: 20px;
         }
-        
-        .action-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--teal);
         }
-        
-        .card-subtitle {
-            color: #005DAA;
-            font-size: 14px;
-            text-transform: uppercase;
-            font-weight: bold;
-            margin-bottom: 5px;
+
+        h2 {
+            font-size: 22px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 20px;
         }
-        
-        .card-title {
+
+        h3 {
             font-size: 18px;
-            margin-bottom: 12px;
-            color: #333;
+            font-weight: 600;
         }
-        
-        .card-description {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 15px;
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
-        
-        .card-meta {
+
+        .header {
+            background-color: var(--dark-blue);
+            color: white;
+            padding: 15px 0;
+        }
+
+        .header-content {
             display: flex;
             justify-content: space-between;
-            border-top: 1px solid #eee;
-            padding-top: 15px;
-            font-size: 13px;
-            color: #777;
+            align-items: center;
         }
-        
-        .card-meta div {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .meta-label {
-            font-weight: bold;
-            margin-bottom: 3px;
-        }
-        
-        /* Restart Button */
-        .restart-btn {
-            display: block;
-            margin: 30px auto;
-            padding: 12px 30px;
-            background-color: #005DAA;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
+
+        .logo {
+            font-size: 22px;
             font-weight: 600;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 30px;
+        }
+
+        .main-content {
+            padding: 40px 0;
+        }
+
+        .title-section {
+            margin-bottom: 20px;
+        }
+
+        .summary-box {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.1);
+            padding: 16px;
+            margin-bottom: 30px;
+            border-left: 3px solid var(--teal);
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .filter-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .question-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(16, 24, 40, 0.15);
+            padding: 24px;
+            margin-bottom: 30px;
+            border-left: 3px solid var(--highlight);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .question-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .skip-option {
+            color: var(--text-secondary);
+            font-size: 14px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            text-decoration: underline;
         }
         
-        .restart-btn:hover {
-            background-color: #00488a;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        .summary-indicator {
+            background-color: var(--teal);
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-weight: 500;
+            text-align: center;
         }
         
-        /* Responsive Design */
-        @media (max-width: 900px) {
-            .results-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .filter-list-container {
+            margin-top: 24px;
         }
         
-        @media (max-width: 600px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .question-card {
-                padding: 20px;
-            }
-            
-            .btn-container {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .btn {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-            
-            .results-grid {
+        .filter-list-container h3 {
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+        
+        .filter-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .filter-list li {
+            background-color: rgba(85, 171, 201, 0.1);
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--teal);
+        }
+
+        .feedback-message {
+            background-color: #F0F9FF;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 15px;
+            color: var(--teal);
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.1);
+            padding: 24px;
+            margin-bottom: 20px;
+            border-left: 3px solid var(--teal);
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+
+        .card.filtered {
+            opacity: 0.5;
+            border-left: 3px solid var(--border-color);
+        }
+
+        .card-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+
+        .card-overtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .card-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .feature-tag {
+            display: inline-block;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-right: 8px;
+            margin-bottom: 5px;
+        }
+
+        .tag-trade-mark {
+            background-color: rgba(222, 67, 38, 0.1);
+            color: var(--trade-mark-color);
+        }
+
+        .tag-any {
+            background-color: rgba(102, 112, 133, 0.1);
+            color: var(--any-color);
+        }
+
+        .response-tag {
+            display: inline-block;
+            background-color: rgba(85, 171, 201, 0.1);
+            color: var(--teal);
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin-right: 8px;
+            margin-bottom: 5px;
+        }
+
+        .sort-container {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 16px;
+            min-width: 200px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(85, 171, 201, 0.15);
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--teal);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #4799B5;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: #F9FAFB;
+        }
+        
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .card-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .nav a {
+                margin-left: 15px;
+            }
+            
+            .filter-controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .two-column-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>IP Australia Questionnaire</h1>
-        <p>Discover potential intellectual property actions for your situation</p>
-    </header>
-    
-    <div class="container">
-        <div class="progress-bar">
-            <div class="progress" id="progress-bar"></div>
-        </div>
-        
-        <div id="question-container"></div>
-        
-        <div class="results-section" id="results-section">
-            <div class="results-header">
-                <h2>Actions For Consideration</h2>
-                <p>Based on your responses, here are some potential actions you may wish to consider.</p>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">IP First Response</div>
+                <nav class="nav">
+                    <a href="#">Home</a>
+                    <a href="#">About</a>
+                    <a href="#">Contact</a>
+                </nav>
             </div>
-            <div class="results-grid" id="results-grid"></div>
-            <button class="restart-btn" id="restart-btn">Start Again</button>
         </div>
-    </div>
-    
+    </header>
+
+    <main class="container main-content">
+        <div class="title-section">
+            <h1>Options for Trade Marks</h1>
+            <p>Discover the most suitable options to help you respond to a trade mark issue.</p>
+        </div>
+
+        <div class="two-column-layout">
+            <div class="sidebar">
+                <div id="question-section" class="question-sidebar">
+                    <div class="question-text" id="current-question">Loading question...</div>
+                    <div class="question-buttons">
+                        <button class="btn btn-primary" id="btn-yes">Yes</button>
+                        <span class="skip-option" id="btn-skip">skip</span>
+                        <button class="btn btn-secondary" id="btn-no">No</button>
+                    </div>
+                    
+                    <div class="summary-indicator" id="summary-indicator">
+                        <span id="summary-count">Loading...</span>
+                    </div>
+                    
+                    <div class="filter-list-container" id="filter-list-container">
+                        <h3>Showing:</h3>
+                        <ul class="filter-list" id="filter-list">
+                            <!-- Filter statements will be added here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="main-area">
+                <div class="filter-controls">
+                    <div class="sort-container">
+                        <label for="sort-select">Sort by:</label>
+                        <select id="sort-select" class="form-control">
+                            <option value="random">Random</option>
+                            <option value="cost">Estimated cost</option>
+                            <option value="time">Estimated time</option>
+                            <option value="escalation">Escalation (low to high)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="card-grid" id="options-container">
+                    <div class="card">
+                        <div class="card-overtitle">Loading...</div>
+                        <div class="card-title">Loading options...</div>
+                        <div class="card-subtitle">Please wait while we load options for you.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
     <script>
-        // Debug Mode
-        const DEBUG = true;
-        
-        function debugLog(message) {
-            if (DEBUG) {
-                console.log(`DEBUG: ${message}`);
-            }
-        }
-        
-        // Question Data Structure with Branching Logic
-        const questions = [
+        // Data for options - this would normally be loaded from a server/database
+        const allOptions = [
             {
-                id: 1,
-                text: "Do you have a new invention or technological solution?",
-                nextIfYes: 2,
-                nextIfNo: 3,
-                nextIfSkip: 2
+                "Overtitle": "Trade mark opposition",
+                "Main Title": "Challenge the registration of a trade mark",
+                "Description": "Initiate a trade mark opposition process against a new trademark with IP Australia",
+                "Response Type": "Enforcement",
+                "Right it applies to": "Trade mark"
             },
             {
-                id: 2,
-                text: "Is your invention related to a physical product?",
-                nextIfYes: 4,
-                nextIfNo: 5,
-                nextIfSkip: 4
+                "Overtitle": "Trade mark registration revocation",
+                "Main Title": "Remove a trade mark from the register",
+                "Description": "Let IP Australia know a recently registered trade mark should not have been registered",
+                "Response Type": "Enforcement",
+                "Right it applies to": "Trade mark"
             },
             {
-                id: 3,
-                text: "Do you have a new brand name, logo, or business identity?",
-                nextIfYes: 6,
-                nextIfNo: 7,
-                nextIfSkip: 6
+                "Overtitle": "Trade mark non-use action",
+                "Main Title": "Remove a trade mark from the register",
+                "Description": "Request IP Australia removes a trade mark from the register for non-use",
+                "Response Type": "Enforcement",
+                "Right it applies to": "Trade mark"
             },
             {
-                id: 4,
-                text: "Have you disclosed your invention to others outside your organization?",
-                nextIfYes: 8,
-                nextIfNo: 9,
-                nextIfSkip: 8
+                "Overtitle": "Court - Trade Mark",
+                "Main Title": "Seek binding, authoritative decisions",
+                "Description": "Escalate a wide range of trade mark matters to court",
+                "Response Type": "Enforcement; Accused",
+                "Right it applies to": "Trade mark"
             },
             {
-                id: 5,
-                text: "Is your technological solution software-based?",
-                nextIfYes: 10,
-                nextIfNo: 11,
-                nextIfSkip: 10
+                "Overtitle": "Interim court injuction order",
+                "Main Title": "Stop infringing activity immediately",
+                "Description": "Lodge an interim injunction order through court",
+                "Response Type": "Enforcement",
+                "Right it applies to": "Any"
             },
             {
-                id: 6,
-                text: "Are you currently using this brand in the marketplace?",
-                nextIfYes: 12,
-                nextIfNo: 13,
-                nextIfSkip: 12
+                "Overtitle": "World IP Organisation (WIPO) ",
+                "Main Title": "Resolve international disputes",
+                "Description": "Seek dispute resolution through the WIPO Arbitration and Mediation Center",
+                "Response Type": "Enforcement",
+                "Right it applies to": "Any"
             },
             {
-                id: 7,
-                text: "Have you created original creative content (writing, art, music, etc.)?",
-                nextIfYes: 14,
-                nextIfNo: 15,
-                nextIfSkip: 14
+                "Overtitle": "Alternative dispute resolution (ADR)",
+                "Main Title": "resolve conflicts with the help of experienced facilitators",
+                "Description": "Understand more about the options in the ADR space.",
+                "Response Type": "Enforcement; Accused",
+                "Right it applies to": "Any"
             },
             {
-                id: 8,
-                text: "Was the disclosure made under a confidentiality agreement?",
-                nextIfYes: 16,
-                nextIfNo: 17,
-                nextIfSkip: 16
+                "Overtitle": "ASBFEO",
+                "Main Title": "Access help tailored to resolve business disputes",
+                "Description": "Australia Small Business & Family Enterprise Ombudsman (ASBFEO).",
+                "Response Type": "Enforcement; Accused",
+                "Right it applies to": "Any"
             },
             {
-                id: 9,
-                text: "Are you planning to commercialize your invention in the next 12 months?",
-                nextIfYes: 18,
-                nextIfNo: 19,
-                nextIfSkip: 18
+                "Overtitle": "Mediation",
+                "Main Title": "Resolve IP issues with the help of a third party",
+                "Description": "Invite the other party to enter into mediation to agree to mutually acceptable agreement.",
+                "Response Type": "Enforcement",
+                "Right it applies to": "Any"
             },
             {
-                id: 10,
-                text: "Does your software solve a technical problem in a unique way?",
-                nextIfYes: 20,
-                nextIfNo: 21,
-                nextIfSkip: 20
+                "Overtitle": "Arbitration",
+                "Main Title": "Resolve IP issues with the help of a third party",
+                "Description": "Agree to be bound by the decision of a highly qualified third party assessment.",
+                "Response Type": "Enforcement",
+                "Right it applies to": "Any"
             },
             {
-                id: 11,
-                text: "Is your invention in a competitive market with many similar products?",
-                nextIfYes: 22,
-                nextIfNo: 23,
-                nextIfSkip: 22
+                "Overtitle": "Letter of demand",
+                "Main Title": "Demand the other party stops infringing",
+                "Description": "Send a letter to the infringing party notifying them of potential infringement.",
+                "Response Type": "Enforcement",
+                "Right it applies to": "Any"
             },
             {
-                id: 12,
-                text: "Have you checked if similar trademarks already exist?",
-                nextIfYes: 24,
-                nextIfNo: 25,
-                nextIfSkip: 24
+                "Overtitle": "Informal contact",
+                "Main Title": "Provide an opportunity to stop infringement",
+                "Description": "Alert the alleged infringer of your registered rights to allow them to stop infringing.",
+                "Response Type": "Enforcement",
+                "Right it applies to": "Any"
             },
             {
-                id: 13,
-                text: "Do you plan to expand your business internationally in the future?",
-                nextIfYes: 26,
-                nextIfNo: 27,
-                nextIfSkip: 26
+                "Overtitle": "Informal contact",
+                "Main Title": "Respond informally to accusations of IP infringement",
+                "Description": "Let the accuser know about your circumstances.",
+                "Response Type": "Accused",
+                "Right it applies to": "Any"
             },
             {
-                id: 14,
-                text: "Is your creative content intended for commercial use?",
-                nextIfYes: 28,
-                nextIfNo: 29,
-                nextIfSkip: 28
+                "Overtitle": "Negotiation",
+                "Main Title": "Agree to a commercial arrangement",
+                "Description": "Work with an IP professional to come to an agreement with another party.",
+                "Response Type": "Enforcement; Accused",
+                "Right it applies to": "Any"
             },
             {
-                id: 15,
-                text: "Do you have confidential business information that gives you a competitive advantage?",
-                nextIfYes: 30,
-                nextIfNo: null,
-                nextIfSkip: 30
+                "Overtitle": "Takedown request",
+                "Main Title": "Stop infringement facilitated online",
+                "Description": "Request infringing material is removed from online marketplaces and platforms.",
+                "Response Type": "Enforcement",
+                "Right it applies to": "Trade mark; Copyright"
+            },
+            {
+                "Overtitle": "Report IP crime or safety concerns",
+                "Main Title": "Prevent risks to public interest",
+                "Description": "Inform Government about risks to public health, crime, counterfeiting, frauds & scams.",
+                "Response Type": "Enforcement",
+                "Right it applies to": "Any"
+            },
+            {
+                "Overtitle": "Notice of Objection",
+                "Main Title": "Stop infringing goods entering the country",
+                "Description": "Lodge a notice of objection with the Australian Border Force.",
+                "Response Type": "Enforcement; Proactive",
+                "Right it applies to": "Trade mark; Copyright"
+            },
+            {
+                "Overtitle": "IP attorney or lawyer",
+                "Main Title": "Obtain legal advice on enforcement options",
+                "Description": "Seek a qualified & experienced professional to provide specific, tailored advice.",
+                "Response Type": "Enforcement; Proactive; Accused",
+                "Right it applies to": "Any"
+            },
+            {
+                "Overtitle": "International options",
+                "Main Title": "Enforce your IP overseas",
+                "Description": "Understand options relating to enforcing your IP overseas. ",
+                "Response Type": "Enforcement",
+                "Right it applies to": "Any"
+            },
+            {
+                "Overtitle": "Monitor the situation",
+                "Main Title": "Take no immediate action",
+                "Description": "Strategically enforce your IP only when worthwhile.",
+                "Response Type": "Enforcement; Accused",
+                "Right it applies to": "Any"
+            },
+            {
+                "Overtitle": "Rebrand your business",
+                "Main Title": "Avoid potential IP conflicts",
+                "Description": "Strategically rebrand your business to avoid disputes.",
+                "Response Type": "Enforcement",
+                "Right it applies to": "Trade mark"
+            },
+            {
+                "Overtitle": "IP insurance",
+                "Main Title": "Coverage against potential future infringement",
+                "Description": "Protect yourself from certain costs involved in IP disputes",
+                "Response Type": "Proactive",
+                "Right it applies to": "Patents; Trade mark; Copyright"
+            },
+            {
+                "Overtitle": "Domain Name Dispute (auDRP)",
+                "Main Title": "Dispute a domain name that infringes your trade mark",
+                "Description": "Dispute an .au domain name that may infringe an IP right",
+                "Response Type": "Enforcement",
+                "Right it applies to": "Trade mark"
+            },
+            {
+                "Overtitle": "Domain Name Dispute (UDRP)",
+                "Main Title": "Challenge the use of international domain name",
+                "Description": "Dispute an international domain name that may infringe an IP right",
+                "Response Type": "Enforcement",
+                "Right it applies to": "Trade mark"
+            },
+            {
+                "Overtitle": "Apply for a trade mark ",
+                "Main Title": "Register your trade mark  ",
+                "Description": "Strengthen your position as the registered owner of your trade mark in Australia",
+                "Response Type": "Proactive; Enforcement",
+                "Right it applies to": "Trade mark"
+            },
+            {
+                "Overtitle": "Contact intermediaries",
+                "Main Title": "Engage with product distributors",
+                "Description": "Establish and maintain connections with suppliers, manufacturers, and resellers of your goods.",
+                "Response Type": "Proactive; Enforcement",
+                "Right it applies to": "Any"
+            },
+            {
+                "Overtitle": "IP audits",
+                "Main Title": "Review your IP portfolio",
+                "Description": "Understand and assess the health and enforceability of your IP.",
+                "Response Type": "Proactive",
+                "Right it applies to": "Any"
+            },
+            {
+                "Overtitle": "Registration",
+                "Main Title": "Register your trade mark",
+                "Description": "Apply to register your trade mark with IP Australia.",
+                "Response Type": "Proactive; Enforcement; Accused ",
+                "Right it applies to": "Trade marks"
+            },
+            {
+                "Overtitle": "IP licensing",
+                "Main Title": "License your IP rights",
+                "Description": "Let others use your trade mark under agreed terms.",
+                "Response Type": "Proactive",
+                "Right it applies to": "Any"
+            },
+            {
+                "Overtitle": "Legislation",
+                "Main Title": "Understand relevant laws",
+                "Description": "Review the laws that protect and govern your trade mark rights.",
+                "Response Type": "Proactive",
+                "Right it applies to": "Trade marks"
+            },
+            {
+                "Overtitle": "Monitoring service - TMs",
+                "Main Title": "Monitor for infringement",
+                "Description": "Get alerts when others use similar trade marks.",
+                "Response Type": "Proactive",
+                "Right it applies to": "Trade marks"
+            },
+            {
+                "Overtitle": "In-house expertise",
+                "Main Title": "Employ IP specialists",
+                "Description": "Hire specialists to manage your business IP matters.",
+                "Response Type": "Proactive",
+                "Right it applies to": "Any"
+            },
+            {
+                "Overtitle": "Customer awareness",
+                "Main Title": "Educate your customers",
+                "Description": "Help customers recognise and choose your brand above others.",
+                "Response Type": "Proactive",
+                "Right it applies to": "Any"
+            },
+            {
+                "Overtitle": "Supply chain protection",
+                "Main Title": "Monitor supply chains",
+                "Description": "Identify key stakeholders in your product's supply chain to protect your interests.",
+                "Response Type": "Proactive",
+                "Right it applies to": "Any"
+            },
+            {
+                "Overtitle": "Proactive strategy",
+                "Main Title": "Plan offensive actions",
+                "Description": "Implement proactive measures to protect your IP, including legal actions.",
+                "Response Type": "Proactive",
+                "Right it applies to": "Any"
+            },
+            {
+                "Overtitle": "Defensive strategy",
+                "Main Title": "Implement defensive measures",
+                "Description": "Identify ways to protect your business without commencing legal action.",
+                "Response Type": "Proactive",
+                "Right it applies to": "Any"
+            },
+            {
+                "Overtitle": "Market presence",
+                "Main Title": "Use your IP actively",
+                "Description": "Ensure your IP is actively used in the market to maintain rights.",
+                "Response Type": "Proactive",
+                "Right it applies to": "Trade marks"
+            },
+            {
+                "Overtitle": "Online protection",
+                "Main Title": "Register with brand platforms",
+                "Description": "Strengthen your standing in online marketplaces like Amazon Brand Registry.",
+                "Response Type": "Proactive",
+                "Right it applies to": "Trade marks"
+            },
+            {
+                "Overtitle": "Risk assessment",
+                "Main Title": "Predict potential infringement",
+                "Description": "Determine likely areas of IP infringement to strengthen your response plan.",
+                "Response Type": "Proactive",
+                "Right it applies to": "Any"
+            },
+            {
+                "Overtitle": "Register monitoring",
+                "Main Title": "Track similar registrations",
+                "Description": "Set up alerts when others try to register similar trade marks.",
+                "Response Type": "Proactive",
+                "Right it applies to": "Trade mark"
+            },
+            {
+                "Overtitle": "IP search",
+                "Main Title": "Find and understand existing IP rights",
+                "Description": "Discover existing IP rights that may impact your business decisions.",
+                "Response Type": "Proactive",
+                "Right it applies to": "All types"
+            },
+            {
+                "Overtitle": "Portfolio expansion",
+                "Main Title": "Apply for additional IP rights",
+                "Description": "Extend your IP protection by securing additional rights in relevant categories.",
+                "Response Type": "Proactive",
+                "Right it applies to": "All types"
+            },
+            {
+                "Overtitle": "Market entry assessment",
+                "Main Title": "Request a freedom to operate search",
+                "Description": "Determine if your product or service might infringe on existing IP rights.",
+                "Response Type": "Proactive",
+                "Right it applies to": "All types"
+            },
+            {
+                "Overtitle": "IP audits",
+                "Main Title": "Commission an IP rights audit",
+                "Description": "Obtain a comprehensive assessment of your existing IP assets and protections.",
+                "Response Type": "Proactive",
+                "Right it applies to": "All types"
+            },
+            {
+                "Overtitle": "Commercialisation",
+                "Main Title": "Develop a strategy to make money from your IP",
+                "Description": "Create an integrated plan to leverage your IP assets for business growth.",
+                "Response Type": "Proactive",
+                "Right it applies to": "All types"
+            },
+            {
+                "Overtitle": "Negotiate a resolution",
+                "Main Title": "Engage constructively with rights holders",
+                "Description": "Make mutually beneficial deals with other IP rights owners.",
+                "Response Type": "Accused",
+                "Right it applies to": "All types"
+            },
+            {
+                "Overtitle": "IP valuation",
+                "Main Title": "Determine the value of IP",
+                "Description": "Get professional assessment of the financial worth of specific intellectual property.",
+                "Response Type": "Accused; Enforcement",
+                "Right it applies to": "All types"
+            },
+            {
+                "Overtitle": "IP assessment",
+                "Main Title": "Gather detailed information",
+                "Description": "Obtain expert insights about your specific IP situation and options.",
+                "Response Type": "Proactive",
+                "Right it applies to": "All types"
+            },
+            {
+                "Overtitle": "Finding an IP professional",
+                "Main Title": "Preparing for your IP professional consultation",
+                "Description": "Make the most of initial meetings with IP professionals through proper preparation.",
+                "Response Type": "Proactive; Accused; Enforcement",
+                "Right it applies to": "All types"
+            },
+            {
+                "Overtitle": "Check for spam",
+                "Main Title": "Read their accusation carefully",
+                "Description": "Consider their allegations and whether their contact letter seems legitimate",
+                "Response Type": "Accused ",
+                "Right it applies to": "Any"
+            },
+            {
+                "Overtitle": "Review their IP",
+                "Main Title": "Check the other party's IP",
+                "Description": "Make sure they have valid IP and raise any issues with these",
+                "Response Type": "Proactive; Accused",
+                "Right it applies to": "All types"
+            },
+            {
+                "Overtitle": "Licensing agreements",
+                "Main Title": "Review licensing arrangements",
+                "Description": "Check any existing licencing agreements to ensure you're complying",
+                "Response Type": "Accused ",
+                "Right it applies to": "Any"
+            },
+            {
+                "Overtitle": "Unjust threats",
+                "Main Title": "Take action against unjust threats",
+                "Description": "Take another party to court for making ungrounded accusions of infringement",
+                "Response Type": "Enforcement",
+                "Right it applies to": "Any"
+            },
+            {
+                "Overtitle": "Stop infringing activity",
+                "Main Title": "Cease using the IP",
+                "Description": "Stop using the IP you're accused of infringing ",
+                "Response Type": "Accused",
+                "Right it applies to": "Any"
+            },
+            {
+                "Overtitle": "Contact intermediaries",
+                "Main Title": "Alert your supply chain to issues",
+                "Description": "Ask intermediaries to cease enabling infringement",
+                "Response Type": "Enforcement",
+                "Right it applies to": "Any"
             }
         ];
-        
-        // Possible Actions for Consideration
-        const actions = [
+
+        // Filter options to only include those tagged with "Trade mark" or "Any"
+        const tradeMarkOptions = allOptions.filter(option => {
+            const rightType = option["Right it applies to"];
+            return rightType.includes("Trade mark") || 
+                   rightType.includes("Trade marks") || 
+                   rightType === "Any" || 
+                   rightType === "All types";
+        });
+
+        // Questions for filtering
+        const filterQuestions = [
             {
-                id: 1,
-                subtitle: "Patent Protection",
-                title: "File a Provisional Patent Application",
-                description: "Secure a priority date for your invention while giving yourself 12 months to decide on proceeding with a standard patent application.",
-                cost: "$2,000 - $5,000",
-                time: "1-2 months",
-                resolutionRate: "High for securing a priority date",
-                triggers: [2, 4, 9, 11]
+                text: "Are you responding to accusations that you've infringed someone else's trade mark?",
+                filterProperty: "Response Type",
+                filterValue: "Accused",
+                expectedAnswer: "Yes" // If user answers "Yes", we keep options that match filterValue
             },
             {
-                id: 2,
-                subtitle: "Patent Protection",
-                title: "File a Standard Patent Application",
-                description: "Obtain comprehensive protection for your invention for up to 20 years in Australia.",
-                cost: "$8,000 - $15,000",
-                time: "3-5 years",
-                resolutionRate: "Moderate (50-60%)",
-                triggers: [2, 4, 9, 18]
+                text: "Are you looking to take action against someone who may be infringing your trade mark?",
+                filterProperty: "Response Type",
+                filterValue: "Enforcement",
+                expectedAnswer: "Yes"
             },
             {
-                id: 3,
-                subtitle: "Patent Protection",
-                title: "File an Innovation Patent Application",
-                description: "Secure a faster, less expensive patent with an 8-year term for incremental innovations.",
-                cost: "$4,000 - $8,000",
-                time: "6-12 months",
-                resolutionRate: "Higher than standard patents (70-80%)",
-                triggers: [5, 10, 22]
+                text: "Do you want to take preventative measures to protect your trade mark?",
+                filterProperty: "Response Type",
+                filterValue: "Proactive",
+                expectedAnswer: "Yes"
             },
             {
-                id: 4,
-                subtitle: "Trademark Protection",
-                title: "File a Trademark Application",
-                description: "Protect your brand identity including name, logo, slogan, or other distinctive elements in Australia.",
-                cost: "$1,500 - $3,000",
-                time: "7-9 months",
-                resolutionRate: "High (75-85% if distinctive)",
-                triggers: [3, 6, 12]
+                text: "Is this trade mark dispute related to online content or e-commerce?",
+                filterProperty: "Overtitle",
+                filterValue: ["Takedown request", "Domain Name Dispute", "Online protection"],
+                expectedAnswer: "Yes"
             },
             {
-                id: 5,
-                subtitle: "International Protection",
-                title: "File an International Patent Application (PCT)",
-                description: "Secure the option to file patents in multiple countries within 30 months of your first filing.",
-                cost: "$10,000 - $20,000",
-                time: "30-31 months before national phase",
-                resolutionRate: "Varies by country",
-                triggers: [9, 13, 26]
+                text: "Would you prefer to avoid formal legal proceedings if possible?",
+                filterProperty: "Overtitle",
+                filterValue: ["Court", "Interim court", "WIPO"],
+                expectedAnswer: "No" // If user answers "No", we keep options that DON'T match filterValue
             },
             {
-                id: 6,
-                subtitle: "Trademark Strategy",
-                title: "Conduct a Comprehensive Trademark Search",
-                description: "Identify potential conflicts before filing your trademark application to avoid rejection or legal issues.",
-                cost: "$800 - $2,000",
-                time: "1-2 weeks",
-                resolutionRate: "N/A (search service)",
-                triggers: [3, 13, 25]
+                text: "Is this issue related to a registered trade mark?",
+                filterProperty: "Overtitle",
+                filterValue: ["Registration", "Apply for a trade mark", "Legislation"],
+                expectedAnswer: "Yes"
             },
             {
-                id: 7,
-                subtitle: "IP Strategy",
-                title: "Develop a Trade Secret Protection Plan",
-                description: "Implement protocols and agreements to protect valuable confidential business information.",
-                cost: "$2,000 - $5,000",
-                time: "1-2 months",
-                resolutionRate: "High if properly implemented",
-                triggers: [15, 30]
+                text: "Are you concerned about international protection of your trade mark?",
+                filterProperty: "Overtitle",
+                filterValue: ["International options", "WIPO", "UDRP"],
+                expectedAnswer: "Yes"
             },
             {
-                id: 8,
-                subtitle: "Software Protection",
-                title: "Register Copyright for Software Code",
-                description: "Establish evidence of ownership for your software's code and prevent direct copying.",
-                cost: "$500 - $1,500",
-                time: "2-4 months",
-                resolutionRate: "Very high for registration",
-                triggers: [5, 10, 14]
-            },
-            {
-                id: 9,
-                subtitle: "Creative Protection",
-                title: "Register Copyright for Creative Works",
-                description: "Document your ownership of creative works like writing, art, or music.",
-                cost: "$500 - $1,000",
-                time: "2-3 months",
-                resolutionRate: "Very high for registration",
-                triggers: [7, 14, 28]
-            },
-            {
-                id: 10,
-                subtitle: "IP Strategy",
-                title: "Consult with an IP Professional",
-                description: "Get personalized advice from a patent attorney or IP specialist on your specific situation.",
-                cost: "$500 - $1,000",
-                time: "1-2 weeks",
-                resolutionRate: "N/A (advisory service)",
-                triggers: [8, 17, 19, 21, 23, 27, 29]
+                text: "Would you consider working with an IP professional on this issue?",
+                filterProperty: "Overtitle",
+                filterValue: ["IP attorney", "IP assessment", "Finding an IP professional"],
+                expectedAnswer: "Yes"
             }
         ];
-        
-        // Application State
+
+        // Variables to track state
+        let filteredOptions = [...tradeMarkOptions];
+        let activeOptions = [...tradeMarkOptions];
         let currentQuestionIndex = 0;
-        let questionHistory = [];
         let userResponses = {};
-        let totalQuestions = questions.length;
-        
-        // DOM Elements
-        const questionContainer = document.getElementById('question-container');
-        const progressBar = document.getElementById('progress-bar');
-        const resultsSection = document.getElementById('results-section');
-        const resultsGrid = document.getElementById('results-grid');
-        const restartBtn = document.getElementById('restart-btn');
-        
-        // Initialize the application
-        function initApp() {
-            debugLog('Initializing application');
-            currentQuestionIndex = 0;
-            questionHistory = [];
-            userResponses = {};
-            
-            // Hide results
-            resultsSection.style.display = 'none';
-            
-            // Show first question
-            displayQuestion(questions[0]);
-            
-            // Reset progress bar
-            updateProgressBar(0);
-        }
-        
-        // Display a question
-        function displayQuestion(question) {
-            debugLog(`Displaying question ${question.id}: "${question.text}"`);
-            
-            // Clear the question container
-            questionContainer.innerHTML = '';
-            
-            // Create question card
-            const questionCard = document.createElement('div');
-            questionCard.className = 'question-card';
-            questionCard.style.display = 'block';
-            
-            // Add question text
-            const questionText = document.createElement('div');
-            questionText.className = 'question-text';
-            questionText.textContent = question.text;
-            questionCard.appendChild(questionText);
-            
-            // Add button container
-            const btnContainer = document.createElement('div');
-            btnContainer.className = 'btn-container';
-            
-            // Create Yes button
-            const yesBtn = document.createElement('button');
-            yesBtn.className = 'btn btn-yes';
-            yesBtn.textContent = 'Yes';
-            yesBtn.addEventListener('click', () => handleResponse(question, 'yes'));
-            btnContainer.appendChild(yesBtn);
-            
-            // Create No button
-            const noBtn = document.createElement('button');
-            noBtn.className = 'btn btn-no';
-            noBtn.textContent = 'No';
-            noBtn.addEventListener('click', () => handleResponse(question, 'no'));
-            btnContainer.appendChild(noBtn);
-            
-            // Create Skip button
-            const skipBtn = document.createElement('button');
-            skipBtn.className = 'btn btn-skip';
-            skipBtn.textContent = 'Skip';
-            skipBtn.addEventListener('click', () => handleResponse(question, 'skip'));
-            btnContainer.appendChild(skipBtn);
-            
-            questionCard.appendChild(btnContainer);
-            questionContainer.appendChild(questionCard);
-            
-            // Animate the appearance
-            setTimeout(() => {
-                questionCard.style.opacity = '1';
-                questionCard.style.transform = 'translateY(0)';
-            }, 10);
-        }
-        
-        // Handle user response
-        function handleResponse(question, response) {
-            debugLog(`User responded "${response}" to question ${question.id}`);
-            
-            // Store response
-            userResponses[question.id] = response;
-            
-            // Add to question history
-            questionHistory.push(question.id);
-            
-            // Determine next question
-            let nextQuestionId;
-            if (response === 'yes') {
-                nextQuestionId = question.nextIfYes;
-            } else if (response === 'no') {
-                nextQuestionId = question.nextIfNo;
-            } else { // skip
-                nextQuestionId = question.nextIfSkip;
+        let filterStatements = [];
+
+        // Function to update filter statements list
+        function updateFilterList() {
+            const filterList = document.getElementById('filter-list');
+            if (!filterList) {
+                console.error('Filter list element not found');
+                return;
             }
             
-            // Update progress
-            updateProgressBar((questionHistory.length / totalQuestions) * 100);
+            filterList.innerHTML = '';
             
-            // Check if we have a next question
-            if (nextQuestionId) {
-                const nextQuestion = questions.find(q => q.id === nextQuestionId);
-                if (nextQuestion) {
-                    displayQuestion(nextQuestion);
+            filterStatements.forEach(statement => {
+                const listItem = document.createElement('li');
+                listItem.textContent = statement;
+                filterList.appendChild(listItem);
+            });
+            
+            // Show/hide the filter list container based on whether there are any statements
+            const filterListContainer = document.getElementById('filter-list-container');
+            if (filterListContainer) {
+                if (filterStatements.length > 0) {
+                    filterListContainer.style.display = 'block';
                 } else {
-                    showResults();
+                    filterListContainer.style.display = 'none';
                 }
-            } else {
-                showResults();
             }
         }
         
-        // Update progress bar
-        function updateProgressBar(percentage) {
-            debugLog(`Updating progress bar to ${percentage}%`);
-            progressBar.style.width = `${percentage}%`;
-        }
-        
-        // Show results based on responses
-        function showResults() {
-            debugLog('Showing results');
+        // Function to generate filter statement based on question and answer
+        function generateFilterStatement(questionIndex, answer) {
+            const question = filterQuestions[questionIndex];
             
-            // Hide questions
-            questionContainer.innerHTML = '';
-            
-            // Show results section
-            resultsSection.style.display = 'block';
-            
-            // Clear previous results
-            resultsGrid.innerHTML = '';
-            
-            // Determine applicable actions based on trigger questions
-            const applicableActions = actions.filter(action => {
-                return action.triggers.some(triggerId => {
-                    // Check if user answered "yes" to any trigger question
-                    return userResponses[triggerId] === 'yes';
-                });
-            });
-            
-            // If no applicable actions, add a default action
-            if (applicableActions.length === 0) {
-                debugLog('No applicable actions found, adding default consultation action');
-                applicableActions.push(actions.find(action => action.id === 10)); // Consultation action
+            if (answer === 'Skip') {
+                return null; // No statement for skipped questions
             }
             
-            // Render action cards
-            applicableActions.forEach(action => {
-                renderActionCard(action);
-            });
+            // Generate statements based on the question and answer
+            switch (questionIndex) {
+                case 0: // Accused of infringement
+                    return answer === 'Yes' 
+                        ? 'Options which respond to accusations of infringement' 
+                        : 'Options for those not accused of infringement';
+                case 1: // Taking action
+                    return answer === 'Yes' 
+                        ? 'Options for enforcing against infringement' 
+                        : 'Options not focused on enforcement';
+                case 2: // Proactive measures
+                    return answer === 'Yes' 
+                        ? 'Options for proactive trade mark protection' 
+                        : 'Options for reactive measures only';
+                case 3: // Online/e-commerce
+                    return answer === 'Yes' 
+                        ? 'Options related to online or e-commerce issues' 
+                        : 'Options for non-digital contexts';
+                case 4: // Avoid court
+                    return answer === 'Yes' 
+                        ? 'Options that avoid formal legal proceedings' 
+                        : 'Options including formal legal proceedings';
+                case 5: // Registered trade mark
+                    return answer === 'Yes' 
+                        ? 'Options related to registered trade marks' 
+                        : 'Options not limited to registered marks';
+                case 6: // International protection
+                    return answer === 'Yes' 
+                        ? 'Options for international trade mark protection' 
+                        : 'Options focused on domestic protection';
+                case 7: // IP professional
+                    return answer === 'Yes' 
+                        ? 'Options involving IP professionals' 
+                        : 'Options you can implement yourself';
+                default:
+                    return null;
+            }
         }
-        
-        // Render an action card
-        function renderActionCard(action) {
-            debugLog(`Rendering action card for "${action.title}"`);
+
+        // Function to shuffle array (for random initial display)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Function to render options
+        function renderOptions() {
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
             
+            // First render active options
+            const activeCards = activeOptions.map(option => {
+                return createOptionCard(option, false);
+            });
+            
+            // Then render filtered out options
+            const filteredOutOptions = filteredOptions.filter(option => !activeOptions.includes(option));
+            const filteredCards = filteredOutOptions.map(option => {
+                return createOptionCard(option, true);
+            });
+            
+            // Append all cards to container
+            activeCards.forEach(card => container.appendChild(card));
+            filteredCards.forEach(card => container.appendChild(card));
+            
+            // Update summary box
+            updateSummary();
+        }
+
+        // Function to create an option card
+        function createOptionCard(option, isFiltered) {
             const card = document.createElement('div');
-            card.className = 'action-card';
+            card.className = `card ${isFiltered ? 'filtered' : ''}`;
             
-            const subtitle = document.createElement('div');
-            subtitle.className = 'card-subtitle';
-            subtitle.textContent = action.subtitle;
-            card.appendChild(subtitle);
+            // Add a data attribute for sorting
+            card.dataset.cost = Math.floor(Math.random() * 5) + 1; // Mock data for sorting
+            card.dataset.time = Math.floor(Math.random() * 5) + 1; // Mock data for sorting
+            card.dataset.escalation = Math.floor(Math.random() * 5) + 1; // Mock data for sorting
             
+            // Overtitle
+            const overtitle = document.createElement('div');
+            overtitle.className = 'card-overtitle';
+            overtitle.textContent = option.Overtitle;
+            card.appendChild(overtitle);
+            
+            // Main Title
             const title = document.createElement('div');
             title.className = 'card-title';
-            title.textContent = action.title;
+            title.textContent = option["Main Title"];
             card.appendChild(title);
             
+            // Description
             const description = document.createElement('div');
-            description.className = 'card-description';
-            description.textContent = action.description;
+            description.className = 'card-subtitle';
+            description.textContent = option.Description;
             card.appendChild(description);
             
-            const meta = document.createElement('div');
-            meta.className = 'card-meta';
+            // Tags for IP type
+            const rightTypes = option["Right it applies to"].split(';').map(t => t.trim());
+            rightTypes.forEach(type => {
+                const tag = document.createElement('span');
+                tag.className = `feature-tag ${type.toLowerCase().includes('trade mark') ? 'tag-trade-mark' : 'tag-any'}`;
+                tag.textContent = type;
+                card.appendChild(tag);
+            });
             
-            const costDiv = document.createElement('div');
-            const costLabel = document.createElement('span');
-            costLabel.className = 'meta-label';
-            costLabel.textContent = 'Est. Cost';
-            const costValue = document.createElement('span');
-            costValue.textContent = action.cost;
-            costDiv.appendChild(costLabel);
-            costDiv.appendChild(costValue);
+            // Response type tags
+            const responseTypes = option["Response Type"].split(';').map(t => t.trim());
+            responseTypes.forEach(type => {
+                const tag = document.createElement('span');
+                tag.className = 'response-tag';
+                tag.textContent = type;
+                card.appendChild(tag);
+            });
             
-            const timeDiv = document.createElement('div');
-            const timeLabel = document.createElement('span');
-            timeLabel.className = 'meta-label';
-            timeLabel.textContent = 'Est. Time';
-            const timeValue = document.createElement('span');
-            timeValue.textContent = action.time;
-            timeDiv.appendChild(timeLabel);
-            timeDiv.appendChild(timeValue);
-            
-            const successDiv = document.createElement('div');
-            const successLabel = document.createElement('span');
-            successLabel.className = 'meta-label';
-            successLabel.textContent = 'Resolution Rate';
-            const successValue = document.createElement('span');
-            successValue.textContent = action.resolutionRate;
-            successDiv.appendChild(successLabel);
-            successDiv.appendChild(successValue);
-            
-            meta.appendChild(costDiv);
-            meta.appendChild(timeDiv);
-            meta.appendChild(successDiv);
-            
-            card.appendChild(meta);
-            
-            resultsGrid.appendChild(card);
+            return card;
         }
-        
-        // Event Listeners
-        restartBtn.addEventListener('click', () => {
-            debugLog('Restarting application');
-            initApp();
+
+        // Function to update summary box
+        function updateSummary() {
+            // Update the summary indicator in the sidebar
+            const summaryCount = document.getElementById('summary-count');
+            summaryCount.textContent = `${activeOptions.length} likely relevant options to consider of ${tradeMarkOptions.length} total`;
+        }
+
+        // Function to filter options based on user response to a question
+        function filterOptions(questionIndex, userAnswer) {
+            const question = filterQuestions[questionIndex];
+            
+            // If user skipped, don't filter
+            if (userAnswer === 'Skip') {
+                return 0; // No options removed
+            }
+            
+            const previousActiveCount = activeOptions.length;
+            
+            // Determine if we should keep or remove items based on match
+            const keepMatches = (userAnswer === question.expectedAnswer);
+            
+            activeOptions = activeOptions.filter(option => {
+                const propertyValue = option[question.filterProperty];
+                
+                // Check if the option matches the filter criteria
+                let isMatch = false;
+                
+                if (Array.isArray(question.filterValue)) {
+                    // If filter value is an array, check if any value matches
+                    isMatch = question.filterValue.some(value => 
+                        propertyValue.includes(value)
+                    );
+                } else {
+                    // If filter value is a string, check if it's included
+                    isMatch = propertyValue.includes(question.filterValue);
+                }
+                
+                // Keep or remove based on whether this is a match and what answer was expected
+                return keepMatches ? isMatch : !isMatch;
+            });
+            
+            // Return the number of options removed
+            return previousActiveCount - activeOptions.length;
+        }
+
+        // Function to display the current question
+        function displayQuestion() {
+            const questionSection = document.getElementById('question-section');
+            
+            if (!questionSection) {
+                console.error('Question section element not found');
+                return;
+            }
+            
+            if (currentQuestionIndex >= filterQuestions.length || activeOptions.length <= 7) {
+                // Hide the question section if we're done with questions or have 7 or fewer options
+                questionSection.classList.add('hidden');
+                return;
+            }
+            
+            const questionElement = document.getElementById('current-question');
+            if (questionElement) {
+                questionElement.textContent = filterQuestions[currentQuestionIndex].text;
+            }
+        }
+
+        // Function to handle user responses to questions
+        function handleQuestionResponse(response) {
+            // Record the response
+            userResponses[currentQuestionIndex] = response;
+            
+            // Filter options based on the response
+            filterOptions(currentQuestionIndex, response);
+            
+            // Generate and add filter statement if not skipped
+            const statement = generateFilterStatement(currentQuestionIndex, response);
+            if (statement) {
+                filterStatements.push(statement);
+                updateFilterList();
+            }
+            
+            // Rerender options with animation
+            renderOptions();
+            
+            // Move to the next question after a delay
+            setTimeout(() => {
+                currentQuestionIndex++;
+                
+                // Check if we should continue with questions
+                // Only show 4 questions maximum, or stop if options <= 7
+                if (currentQuestionIndex >= 4 || activeOptions.length <= 7) {
+                    const questionSection = document.getElementById('question-section');
+                    if (questionSection) {
+                        questionSection.classList.add('hidden');
+                    }
+                    
+                    // Show completion message
+                    const completionMessage = document.createElement('div');
+                    completionMessage.className = 'question-sidebar';
+                    completionMessage.innerHTML = `
+                        <div class="question-text">That's enough filtering. It's time to evaluate the options yourself.</div>
+                        
+                        <div class="summary-indicator">
+                            ${activeOptions.length} likely relevant options to consider of ${tradeMarkOptions.length} total
+                        </div>
+                        
+                        <div class="filter-list-container">
+                            <h3>Showing:</h3>
+                            <ul class="filter-list">
+                                ${filterStatements.map(s => `<li>${s}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                    
+                    const sidebar = document.querySelector('.sidebar');
+                    if (sidebar) {
+                        sidebar.appendChild(completionMessage);
+                    }
+                } else {
+                    // Display the next question
+                    displayQuestion();
+                }
+            }, 500);
+        }
+
+        // Function to sort options
+        function sortOptions(sortBy) {
+            if (sortBy === 'random') {
+                activeOptions = shuffleArray([...activeOptions]);
+            } else {
+                activeOptions.sort((a, b) => {
+                    // Get the corresponding cards to access the dataset attributes
+                    const cardA = document.querySelector(`.card:not(.filtered) [data-${sortBy}="${a.id}"]`);
+                    const cardB = document.querySelector(`.card:not(.filtered) [data-${sortBy}="${b.id}"]`);
+                    
+                    // If we can't find the cards, fallback to random order
+                    if (!cardA || !cardB) return Math.random() - 0.5;
+                    
+                    // Sort based on the data attribute
+                    return parseInt(cardA.dataset[sortBy]) - parseInt(cardB.dataset[sortBy]);
+                });
+            }
+            
+            renderOptions();
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            // Assign IDs to options for tracking
+            tradeMarkOptions.forEach((option, index) => {
+                option.id = index;
+            });
+            
+            // Shuffle options initially
+            activeOptions = shuffleArray([...tradeMarkOptions]);
+            filteredOptions = [...tradeMarkOptions];
+            
+            // Render initial options
+            renderOptions();
+            
+            // Display the first question
+            displayQuestion();
+            
+            // Initially hide the filter list container
+            document.getElementById('filter-list-container').style.display = 'none';
+            
+            // Add event listeners
+            document.getElementById('btn-yes').addEventListener('click', () => handleQuestionResponse('Yes'));
+            document.getElementById('btn-no').addEventListener('click', () => handleQuestionResponse('No'));
+            document.getElementById('btn-skip').addEventListener('click', () => handleQuestionResponse('Skip'));
+            
+            // Add sort listener
+            document.getElementById('sort-select').addEventListener('change', (e) => {
+                sortOptions(e.target.value);
+            });
         });
-        
-        // Initialize the app on load
-        window.addEventListener('load', initApp);
     </script>
 </body>
 </html>
