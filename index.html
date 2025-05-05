@@ -858,8 +858,8 @@ const filterQuestions = [
         text: "Are you responding to an issue of suspected or accused infringment?",
         filterProperty: "Response Type",
         filterValue: ["Accused", "Enforcement"],
-        filterProperty: "Overtitle",
-        filterValue: ["letter of demand", "Informal contact", "IP attorney"], 
+        // filterProperty: "Overtitle",
+        // filterValue: ["letter of demand", "Informal contact", "IP attorney"], 
         expectedAnswer: "Yes"
     },
     {
@@ -1251,7 +1251,7 @@ function generateFilterStatement(questionIndex, answer) {
         default:
             return null;
     }
-}
+
 
         // Function to shuffle array (for random initial display)
         function shuffleArray(array) {
