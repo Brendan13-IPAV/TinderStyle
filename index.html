@@ -854,6 +854,12 @@
 
         // Questions for filtering
 const filterQuestions = [
+        {
+        text: "Are you responding to an issue of suspected or accused infringment?",
+        filterProperty: "Response Type",
+        filterValue: ["Accused", "Enforcement"],
+        expectedAnswer: "Yes"
+    },
     {
         text: "Are goods relating to your trade mark being imported into Australia?",
         filterProperty: "Overtitle",
