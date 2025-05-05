@@ -853,56 +853,93 @@
         });
 
         // Questions for filtering
-        const filterQuestions = [
-            {
-                text: "Are you responding to accusations that you've infringed someone else's trade mark?",
-                filterProperty: "Response Type",
-                filterValue: "Accused",
-                expectedAnswer: "Yes" // If user answers "Yes", we keep options that match filterValue
-            },
-            {
-                text: "Are you looking to take action against someone who may be infringing your trade mark?",
-                filterProperty: "Response Type",
-                filterValue: "Enforcement",
-                expectedAnswer: "Yes"
-            },
-            {
-                text: "Do you want to take preventative measures to protect your trade mark?",
-                filterProperty: "Response Type",
-                filterValue: "Proactive",
-                expectedAnswer: "Yes"
-            },
-            {
-                text: "Is this trade mark dispute related to online content or e-commerce?",
-                filterProperty: "Overtitle",
-                filterValue: ["Takedown request", "Domain Name Dispute", "Online protection"],
-                expectedAnswer: "Yes"
-            },
-            {
-                text: "Would you prefer to avoid formal legal proceedings if possible?",
-                filterProperty: "Overtitle",
-                filterValue: ["Court", "Interim court", "WIPO"],
-                expectedAnswer: "No" // If user answers "No", we keep options that DON'T match filterValue
-            },
-            {
-                text: "Is this issue related to a registered trade mark?",
-                filterProperty: "Overtitle",
-                filterValue: ["Registration", "Apply for a trade mark", "Legislation"],
-                expectedAnswer: "Yes"
-            },
-            {
-                text: "Are you concerned about international protection of your trade mark?",
-                filterProperty: "Overtitle",
-                filterValue: ["International options", "WIPO", "UDRP"],
-                expectedAnswer: "Yes"
-            },
-            {
-                text: "Would you consider working with an IP professional on this issue?",
-                filterProperty: "Overtitle",
-                filterValue: ["IP attorney", "IP assessment", "Finding an IP professional"],
-                expectedAnswer: "Yes"
-            }
-        ];
+const filterQuestions = [
+    {
+        text: "Are goods relating to your trade mark being imported into Australia?",
+        filterProperty: "Overtitle",
+        filterValue: ["letter of demand", "intermediaries", "Notice of Objection", "IP attorney"],
+        expectedAnswer: "Yes"
+    },
+    {
+        text: "Is this dispute related to online marketplace or ecommerce?",
+        filterProperty: "Overtitle",
+        filterValue: ["Takedown request", "Online protection", "Marketplace enforcement"],
+        expectedAnswer: "Yes"
+    },
+    {
+        text: "Can you identify or contact the other party?",
+        filterProperty: "Overtitle",
+        filterValue: ["letter of demand", "Informal contact", "IP attorney"],
+        expectedAnswer: "Yes"
+    },
+    {
+        text: "Would you prefer to avoid formal legal proceedings if possible?",
+        filterProperty: "Overtitle",
+        filterValue: ["Court", "Interim court", "Arbitration", "Negotiation"],
+        expectedAnswer: "No"
+    },
+    {
+        text: "Would you consider working with an IP professional on this issue?",
+        filterProperty: "Overtitle",
+        filterValue: ["IP attorney", "IP assessment", "Finding an IP professional"],
+        expectedAnswer: "Yes"
+    },
+    {
+        text: "Does this dispute relate to a domain name?",
+        filterProperty: "Overtitle",
+        filterValue: ["Domain Name Dispute", "UDRP", "WIPO"],
+        expectedAnswer: "Yes"
+    },
+    {
+        text: "Does the other party have a trade mark you have an issue with?",
+        filterProperty: "Overtitle",
+        filterValue: ["Opposition", "Cease and desist", "trade mark"],
+        expectedAnswer: "Yes"
+    },
+    {
+        text: "Is there an ongoing relationship with the other party that is likely to continue?",
+        filterProperty: "Context",
+        filterValue: ["Ongoing business relationship"],
+        expectedAnswer: "Yes"
+    },
+    {
+        text: "Do you believe negotiations could be possible in this situation?",
+        filterProperty: "Resolution Approach",
+        filterValue: ["Negotiation", "Mediation"],
+        expectedAnswer: "Yes"
+    },
+    {
+        text: "Is the trade mark application currently in its opposition and hearing period?",
+        filterProperty: "Status",
+        filterValue: ["Opposition", "Hearing", "IP Australia decision"],
+        expectedAnswer: "Yes"
+    },
+    {
+        text: "Do you think a particular trade mark should not be registered?",
+        filterProperty: "Response Type",
+        filterValue: "Opposition",
+        expectedAnswer: "Yes"
+    },
+    {
+        text: "Is the infringement happening in Australia?",
+        filterProperty: "Location",
+        filterValue: ["Australia"], 
+        expectedAnswer: "Yes"
+    },
+    {
+        text: "Do you believe the other party is unable or unwilling to engage in discussions about this matter?",
+        filterProperty: "Engagement",
+        filterValue: ["Other party uncooperative"],
+        expectedAnswer: "Yes"
+    },
+    {
+        text: "Are you unable or unwilling to engage in discussions with the other party about this matter?",
+        filterProperty: "Engagement",
+        filterValue: ["You are uncooperative"],
+        expectedAnswer: "Yes"
+    }
+];
+
 
         // Variables to track state
         let filteredOptions = [...tradeMarkOptions];
