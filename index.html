@@ -1509,9 +1509,11 @@ function handleQuestionResponse(response) {
         filterStatements.push(statement);
         updateFilterList();
     }
-    
-    // Rerender options with animation
-    renderOptions();
+
+    activeOptions = shuffleArray([...activeOptions]);      //Shuffel all the options
+
+    renderOptions();      // Rerender options with animation
+
     
     // Move to the next question after a delay
     setTimeout(() => {
