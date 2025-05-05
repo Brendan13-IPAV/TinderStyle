@@ -197,6 +197,26 @@
             margin-bottom: 8px;
             font-size: 14px;
             color: var(--teal);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .remove-filter {
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0 4px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+        }
+        
+        .remove-filter:hover {
+            background-color: rgba(102, 112, 133, 0.1);
+            color: #DE4326;
         }
 
         .feedback-message {
@@ -211,8 +231,14 @@
 
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
+        }
+        
+        @media (min-width: 992px) {
+            .card-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
         .card {
@@ -391,13 +417,15 @@
                     <div class="summary-indicator" id="summary-indicator">
                         <span id="summary-count">Loading...</span>
                     </div>
-                    
-                    <div class="filter-list-container" id="filter-list-container">
-                        <h3>Showing:</h3>
-                        <ul class="filter-list" id="filter-list">
-                            <!-- Filter statements will be added here -->
-                        </ul>
-                    </div>
+                </div>
+                
+                <div id="completion-message-container"></div>
+                
+                <div class="filter-list-container" id="filter-list-container">
+                    <h3>Showing:</h3>
+                    <ul class="filter-list" id="filter-list">
+                        <!-- Filter statements will be added here -->
+                    </ul>
                 </div>
             </div>
             
@@ -893,9 +921,25 @@
             
             filterList.innerHTML = '';
             
-            filterStatements.forEach(statement => {
+            filterStatements.forEach((statement, index) => {
                 const listItem = document.createElement('li');
-                listItem.textContent = statement;
+                
+                // Add statement text
+                const statementSpan = document.createElement('span');
+                statementSpan.textContent = statement;
+                listItem.appendChild(statementSpan);
+                
+                // Add remove icon
+                const removeIcon = document.createElement('span');
+                removeIcon.className = 'remove-filter';
+                removeIcon.textContent = '×'; // Using the multiplication symbol as a cross
+                removeIcon.setAttribute('title', 'Remove this filter');
+                removeIcon.setAttribute('data-index', index);
+                removeIcon.addEventListener('click', function() {
+                    removeFilter(index);
+                });
+                listItem.appendChild(removeIcon);
+                
                 filterList.appendChild(listItem);
             });
             
@@ -907,6 +951,191 @@
                 } else {
                     filterListContainer.style.display = 'none';
                 }
+            }
+        }
+        
+        // Function to remove a filter and reapply all remaining filters
+        function removeFilter(index) {
+            // Get the question index associated with this filter
+            const questionIndex = Object.keys(userResponses).find(key => 
+                generateFilterStatement(parseInt(key), userResponses[key]) === filterStatements[index]
+            );
+            
+            if (questionIndex) {
+                // Remove this response
+                delete userResponses[questionIndex];
+                
+                // Remove the filter statement
+                filterStatements.splice(index, 1);
+                
+                // Reset active options to all options
+                activeOptions = [...tradeMarkOptions];
+                
+                // Reapply all remaining filters
+                for (const [qIndex, response] of Object.entries(userResponses)) {
+                    filterOptionsWithoutCount(parseInt(qIndex), response);
+                }
+                
+                // Update the UI
+                updateFilterList();
+                renderOptions();
+                
+                // Find the first unanswered question
+                let nextQuestionIndex = 0;
+                while (nextQuestionIndex in userResponses && nextQuestionIndex < filterQuestions.length) {
+                    nextQuestionIndex++;
+                }
+                
+                // If we have more questions to ask
+                if (nextQuestionIndex < filterQuestions.length) {
+                    // Clear any completion message
+                    const completionMessage = document.getElementById('completion-message');
+                    if (completionMessage) {
+                        completionMessage.remove();
+                    }
+                    
+                    // We have more questions to ask, so show the question section again
+                    currentQuestionIndex = nextQuestionIndex;
+                    const questionSection = document.getElementById('question-section');
+                    if (questionSection) {
+                        questionSection.classList.remove('hidden');
+                        displayQuestion();
+                    }
+                } else if (activeOptions.length > 7) {
+                    // No more questions but still more than 7 options
+                    // Show a different completion message
+                    const newCompletionMessage = document.createElement('div');
+                    newCompletionMessage.className = 'question-sidebar';
+                    newCompletionMessage.id = 'completion-message';
+                    newCompletionMessage.innerHTML = `
+                        <div class="question-text">You've answered all available questions.</div>
+                        
+                        <div class="summary-indicator">
+                            ${activeOptions.length} likely relevant options to consider of ${tradeMarkOptions.length} total
+                        </div>
+                    `;
+                    
+                    const completionContainer = document.getElementById('completion-message-container');
+                    if (completionContainer) {
+                        completionContainer.innerHTML = '';
+                        completionContainer.appendChild(newCompletionMessage);
+                    }
+                } else {
+                    // 7 or fewer options
+                    const newCompletionMessage = document.createElement('div');
+                    newCompletionMessage.className = 'question-sidebar';
+                    newCompletionMessage.id = 'completion-message';
+                    newCompletionMessage.innerHTML = `
+                        <div class="question-text">That's enough filtering. It's time to evaluate the options yourself.</div>
+                        
+                        <div class="summary-indicator">
+                            ${activeOptions.length} likely relevant options to consider of ${tradeMarkOptions.length} total
+                        </div>
+                    `;
+                    
+                    const completionContainer = document.getElementById('completion-message-container');
+                    if (completionContainer) {
+                        completionContainer.innerHTML = '';
+                        completionContainer.appendChild(newCompletionMessage);
+                    }
+                }
+            }
+        }
+        
+        // A version of filterOptions that doesn't return count (for reapplying filters)
+        function filterOptionsWithoutCount(questionIndex, userAnswer) {
+            const question = filterQuestions[questionIndex];
+            
+            // If user skipped, don't filter
+            if (userAnswer === 'Skip') {
+                return;
+            }
+            
+            // Determine if we should keep or remove items based on match
+            const keepMatches = (userAnswer === question.expectedAnswer);
+            
+            // Create a copy of active options for filtering
+            const newActiveOptions = [...activeOptions];
+            
+            // Count how many options would be removed
+            let removedCount = 0;
+            
+            newActiveOptions.forEach(option => {
+                const propertyValue = option[question.filterProperty];
+                
+                // Check if the option matches the filter criteria
+                let isMatch = false;
+                
+                if (Array.isArray(question.filterValue)) {
+                    // If filter value is an array, check if any value matches
+                    isMatch = question.filterValue.some(value => 
+                        propertyValue.includes(value)
+                    );
+                } else {
+                    // If filter value is a string, check if it's included
+                    isMatch = propertyValue.includes(question.filterValue);
+                }
+                
+                // If this option would be removed, increment count
+                if (keepMatches ? !isMatch : isMatch) {
+                    removedCount++;
+                }
+            });
+            
+            // Limit the number of options removed to 15 at most
+            if (removedCount > 15) {
+                // We need to keep some options that would normally be filtered out
+                let toKeep = removedCount - 15;
+                
+                // Filter the active options
+                activeOptions = activeOptions.filter(option => {
+                    const propertyValue = option[question.filterProperty];
+                    
+                    // Check if the option matches the filter criteria
+                    let isMatch = false;
+                    
+                    if (Array.isArray(question.filterValue)) {
+                        // If filter value is an array, check if any value matches
+                        isMatch = question.filterValue.some(value => 
+                            propertyValue.includes(value)
+                        );
+                    } else {
+                        // If filter value is a string, check if it's included
+                        isMatch = propertyValue.includes(question.filterValue);
+                    }
+                    
+                    // Keep the option if it matches the filter criteria (or doesn't, depending on the expected answer)
+                    const shouldKeep = keepMatches ? isMatch : !isMatch;
+                    
+                    // If we should remove this option but we need to keep some extra ones
+                    if (!shouldKeep && toKeep > 0) {
+                        toKeep--;
+                        return true; // Keep this one anyway
+                    }
+                    
+                    return shouldKeep;
+                });
+            } else {
+                // Normal filtering when removing fewer than 15 options
+                activeOptions = activeOptions.filter(option => {
+                    const propertyValue = option[question.filterProperty];
+                    
+                    // Check if the option matches the filter criteria
+                    let isMatch = false;
+                    
+                    if (Array.isArray(question.filterValue)) {
+                        // If filter value is an array, check if any value matches
+                        isMatch = question.filterValue.some(value => 
+                            propertyValue.includes(value)
+                        );
+                    } else {
+                        // If filter value is a string, check if it's included
+                        isMatch = propertyValue.includes(question.filterValue);
+                    }
+                    
+                    // Keep or remove based on whether this is a match and what answer was expected
+                    return keepMatches ? isMatch : !isMatch;
+                });
             }
         }
         
@@ -1060,7 +1289,13 @@
             // Determine if we should keep or remove items based on match
             const keepMatches = (userAnswer === question.expectedAnswer);
             
-            activeOptions = activeOptions.filter(option => {
+            // Create a copy of active options for filtering
+            const newActiveOptions = [...activeOptions];
+            
+            // Count how many options would be removed
+            let removedCount = 0;
+            
+            newActiveOptions.forEach((option, index) => {
                 const propertyValue = option[question.filterProperty];
                 
                 // Check if the option matches the filter criteria
@@ -1076,12 +1311,72 @@
                     isMatch = propertyValue.includes(question.filterValue);
                 }
                 
-                // Keep or remove based on whether this is a match and what answer was expected
-                return keepMatches ? isMatch : !isMatch;
+                // If this option would be removed, increment count
+                if (keepMatches ? !isMatch : isMatch) {
+                    removedCount++;
+                }
             });
             
-            // Return the number of options removed
-            return previousActiveCount - activeOptions.length;
+            // Limit the number of options removed to 15 at most
+            if (removedCount > 15) {
+                // We need to keep some options that would normally be filtered out
+                let toKeep = removedCount - 15;
+                
+                // Filter the active options
+                activeOptions = activeOptions.filter(option => {
+                    const propertyValue = option[question.filterProperty];
+                    
+                    // Check if the option matches the filter criteria
+                    let isMatch = false;
+                    
+                    if (Array.isArray(question.filterValue)) {
+                        // If filter value is an array, check if any value matches
+                        isMatch = question.filterValue.some(value => 
+                            propertyValue.includes(value)
+                        );
+                    } else {
+                        // If filter value is a string, check if it's included
+                        isMatch = propertyValue.includes(question.filterValue);
+                    }
+                    
+                    // Keep the option if it matches the filter criteria (or doesn't, depending on the expected answer)
+                    const shouldKeep = keepMatches ? isMatch : !isMatch;
+                    
+                    // If we should remove this option but we need to keep some extra ones
+                    if (!shouldKeep && toKeep > 0) {
+                        toKeep--;
+                        return true; // Keep this one anyway
+                    }
+                    
+                    return shouldKeep;
+                });
+                
+                return 15; // We limited removal to 15 options
+            } else {
+                // Normal filtering when removing fewer than 15 options
+                activeOptions = activeOptions.filter(option => {
+                    const propertyValue = option[question.filterProperty];
+                    
+                    // Check if the option matches the filter criteria
+                    let isMatch = false;
+                    
+                    if (Array.isArray(question.filterValue)) {
+                        // If filter value is an array, check if any value matches
+                        isMatch = question.filterValue.some(value => 
+                            propertyValue.includes(value)
+                        );
+                    } else {
+                        // If filter value is a string, check if it's included
+                        isMatch = propertyValue.includes(question.filterValue);
+                    }
+                    
+                    // Keep or remove based on whether this is a match and what answer was expected
+                    return keepMatches ? isMatch : !isMatch;
+                });
+                
+                // Return the number of options removed
+                return previousActiveCount - activeOptions.length;
+            }
         }
 
         // Function to display the current question
@@ -1128,34 +1423,37 @@
                 currentQuestionIndex++;
                 
                 // Check if we should continue with questions
-                // Only show 4 questions maximum, or stop if options <= 7
-                if (currentQuestionIndex >= 4 || activeOptions.length <= 7) {
+                if (activeOptions.length <= 7 || currentQuestionIndex >= filterQuestions.length) {
                     const questionSection = document.getElementById('question-section');
                     if (questionSection) {
                         questionSection.classList.add('hidden');
                     }
                     
+                    // Show appropriate completion message
+                    let messageText = "";
+                    if (activeOptions.length <= 7) {
+                        messageText = "That's enough filtering. It's time to evaluate the options yourself.";
+                    } else {
+                        messageText = "You've answered all available questions.";
+                    }
+                    
                     // Show completion message
                     const completionMessage = document.createElement('div');
                     completionMessage.className = 'question-sidebar';
+                    completionMessage.id = 'completion-message';
                     completionMessage.innerHTML = `
-                        <div class="question-text">That's enough filtering. It's time to evaluate the options yourself.</div>
+                        <div class="question-text">${messageText}</div>
                         
                         <div class="summary-indicator">
                             ${activeOptions.length} likely relevant options to consider of ${tradeMarkOptions.length} total
                         </div>
-                        
-                        <div class="filter-list-container">
-                            <h3>Showing:</h3>
-                            <ul class="filter-list">
-                                ${filterStatements.map(s => `<li>${s}</li>`).join('')}
-                            </ul>
-                        </div>
                     `;
                     
-                    const sidebar = document.querySelector('.sidebar');
-                    if (sidebar) {
-                        sidebar.appendChild(completionMessage);
+                    const completionContainer = document.getElementById('completion-message-container');
+                    if (completionContainer) {
+                        // Clear any existing completion messages
+                        completionContainer.innerHTML = '';
+                        completionContainer.appendChild(completionMessage);
                     }
                 } else {
                     // Display the next question
