@@ -858,6 +858,8 @@ const filterQuestions = [
         text: "Are you responding to an issue of suspected or accused infringment?",
         filterProperty: "Response Type",
         filterValue: ["Accused", "Enforcement"],
+        filterProperty: "Overtitle",
+        filterValue: ["letter of demand", "Informal contact", "IP attorney"], 
         expectedAnswer: "Yes"
     },
     {
@@ -875,7 +877,7 @@ const filterQuestions = [
         {
         text: "Has someone applied for a trade mark that is similar to yours?",
         filterProperty: "Overtitle",
-        filterValue: ["Opposition", "revocation", "Challenge"],
+        filterValue: ["Opposition", "revocation", "Challenge", "IP attorney"],
         expectedAnswer: "Yes"
     },
     {
@@ -887,7 +889,7 @@ const filterQuestions = [
     {
         text: "Would you prefer to avoid formal legal proceedings if possible?",
         filterProperty: "Overtitle",
-        filterValue: ["Court", "Interim court", "Arbitration", "Negotiation"],
+        filterValue: ["Court", "Interim court", "Arbitration", "Negotiation", "IP attorney"],
         expectedAnswer: "No"
     },
     {
@@ -1164,44 +1166,92 @@ function removeFilter(index) {
                 return null; // No statement for skipped questions
             }
             
-            // Generate statements based on the question and answer
-            switch (questionIndex) {
-                case 0: // Accused of infringement
-                    return answer === 'Yes' 
-                        ? 'Options which respond to accusations of infringement' 
-                        : 'Options for those not accused of infringement';
-                case 1: // Taking action
-                    return answer === 'Yes' 
-                        ? 'Options for enforcing against infringement' 
-                        : 'Options not focused on enforcement';
-                case 2: // Proactive measures
-                    return answer === 'Yes' 
-                        ? 'Options for proactive trade mark protection' 
-                        : 'Options for reactive measures only';
-                case 3: // Online/e-commerce
-                    return answer === 'Yes' 
-                        ? 'Options related to online or e-commerce issues' 
-                        : 'Options for non-digital contexts';
-                case 4: // Avoid court
-                    return answer === 'Yes' 
-                        ? 'Options that avoid formal legal proceedings' 
-                        : 'Options including formal legal proceedings';
-                case 5: // Registered trade mark
-                    return answer === 'Yes' 
-                        ? 'Options related to registered trade marks' 
-                        : 'Options not limited to registered marks';
-                case 6: // International protection
-                    return answer === 'Yes' 
-                        ? 'Options for international trade mark protection' 
-                        : 'Options focused on domestic protection';
-                case 7: // IP professional
-                    return answer === 'Yes' 
-                        ? 'Options involving IP professionals' 
-                        : 'Options you can implement yourself';
-                default:
-                    return null;
-            }
-        }
+  // Function to generate filter statement based on question and answer
+function generateFilterStatement(questionIndex, answer) {
+    const question = filterQuestions[questionIndex];
+    
+    if (answer === 'Skip') {
+        return null; // No statement for skipped questions
+    }
+    
+    // Generate statements based on the question and answer
+    switch (questionIndex) {
+        case 0: // Are you responding to an issue of suspected or accused infringment?
+            return answer === 'Yes' 
+                ? 'Options which help respond to accusations of infringement' 
+                : 'Options which do not involve responding to accusations of infringement';
+        case 1: // Are goods relating to your trade mark being imported into Australia?
+            return answer === 'Yes' 
+                ? 'Options which address imported goods issues' 
+                : 'Options which do not involve imported goods';
+        case 2: // Is this dispute related to online marketplace or ecommerce?
+            return answer === 'Yes' 
+                ? 'Options which address online marketplace issues' 
+                : 'Options which do not involve online marketplaces';
+        case 3: // Has someone applied for a trade mark that is similar to yours?
+            return answer === 'Yes' 
+                ? 'Options which challenge similar trade mark applications' 
+                : 'Options which do not involve challenging trade marks';
+        case 4: // Can you identify or contact the other party?
+            return answer === 'Yes' 
+                ? 'Options which involve contacting the other party' 
+                : 'Options which do not require contacting the other party';
+        case 5: // Would you prefer to avoid formal legal proceedings if possible?
+            return answer === 'Yes' 
+                ? 'Options which avoid formal legal proceedings' 
+                : 'Options which include formal legal proceedings';
+        case 6: // Would you consider working with an IP professional on this issue?
+            return answer === 'Yes' 
+                ? 'Options which involve IP professionals' 
+                : 'Options which do not require IP professionals';
+        case 7: // Does this dispute relate to a domain name?
+            return answer === 'Yes' 
+                ? 'Options which address domain name disputes' 
+                : 'Options which do not involve domain names';
+        case 8: // Does the other party have a trade mark you have an issue with?
+            return answer === 'Yes' 
+                ? 'Options which challenge existing trade marks' 
+                : 'Options which do not involve challenging existing trade marks';
+        case 9: // Is there an ongoing relationship with the other party?
+            return answer === 'Yes' 
+                ? 'Options which preserve business relationships' 
+                : 'Options which do not prioritize relationship preservation';
+        case 10: // Do you believe negotiations could be possible?
+            return answer === 'Yes' 
+                ? 'Options which involve negotiation approaches' 
+                : 'Options which do not rely on negotiations';
+        case 11: // Is the trade mark application currently in its opposition period?
+            return answer === 'Yes' 
+                ? 'Options which address trade marks in opposition period' 
+                : 'Options which do not involve opposition period actions';
+        case 12: // Do you think a particular trade mark should not be registered?
+            return answer === 'Yes' 
+                ? 'Options which challenge trade mark registrations' 
+                : 'Options which do not involve registration challenges';
+        case 13: // Are you trying to defend against someone else's claim?
+            return answer === 'Yes' 
+                ? 'Options which defend against infringement claims' 
+                : 'Options which do not involve defending against claims';
+        case 14: // Are you trying to enforce your trade mark rights?
+            return answer === 'Yes' 
+                ? 'Options which enforce your trade mark rights' 
+                : 'Options which do not involve enforcement actions';
+        case 15: // Is the infringement happening in Australia?
+            return answer === 'Yes' 
+                ? 'Options which address Australian infringements' 
+                : 'Options which address international infringements';
+        case 16: // Is the other party unable/unwilling to engage?
+            return answer === 'Yes' 
+                ? 'Options which work with uncooperative parties' 
+                : 'Options which require cooperation from both parties';
+        case 17: // Are you unable/unwilling to engage with the other party?
+            return answer === 'Yes' 
+                ? 'Options which avoid direct engagement' 
+                : 'Options which involve direct engagement';
+        default:
+            return null;
+    }
+}
 
         // Function to shuffle array (for random initial display)
         function shuffleArray(array) {
