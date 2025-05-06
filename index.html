@@ -246,17 +246,17 @@
     display: flex;
     flex-direction: column;
     height: auto; /* Let cards determine their own height */
-    min-height: 200px; /* Set a minimum height for consistency */
+    min-height: 100px; /* Set a minimum height for consistency - was 200px */
 }
 
 /* Create the staggered effect by shifting the middle column only */
 .card-grid > .card:nth-child(3n+2) {
-    transform: translateY(40px); /* Smaller offset to prevent overlap */
+    transform: translateY(60px); /* Smaller offset to prevent overlap */
 }
 
 /* Add extra margin below cards in the middle column to prevent overlap */
 .card-grid > .card:nth-child(3n+2) {
-    margin-bottom: 40px;
+    margin-bottom: 60px;
 }
 
 /* Responsive adjustments */
