@@ -240,9 +240,14 @@
         grid-template-columns: repeat(3, 1fr);
     }
     
-    /* Add this new CSS for the offset effect */
+    /* Add this new CSS for the offset effect - every second column */
     .card-grid > .card:nth-child(3n+2) {
-        margin-top: 50px; /* Adjust this value to control how much the cards are offset */
+        margin-top: 80px; /* Adjust this value for middle column offset */
+    }
+    
+    /* Third column with a different offset if desired */
+    .card-grid > .card:nth-child(3n+3) {
+        margin-top: 40px; /* Adjust this value for third column offset */
     }
 }
 
@@ -254,7 +259,7 @@
     
     /* Offset every second card in two-column view */
     .card-grid > .card:nth-child(even) {
-        margin-top: 50px;
+        margin-top: 60px;
     }
 }
         
