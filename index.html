@@ -229,37 +229,65 @@
             text-align: center;
         }
 
+/* Replace your current card-grid styling with this */
 .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    margin: -30px -15px; /* Negative margin to offset the padding we'll add to cards */
 }
 
-@media (min-width: 992px) {
-    .card-grid {
-        grid-template-columns: repeat(3, 1fr);
+.card {
+    flex: 0 0 calc(33.333% - 30px); /* For 3 columns */
+    margin: 30px 15px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(16, 24, 40, 0.1);
+    padding: 24px;
+    border-left: 3px solid var(--teal);
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    position: relative;
+    /* Remove any fixed height that might be present */
+}
+
+/* Apply staggered effect */
+.card:nth-child(3n+2) {
+    transform: translateY(40px);
+}
+
+.card:nth-child(3n+3) {
+    transform: translateY(80px);
+}
+
+/* For medium screens - 2 column layout */
+@media (max-width: 991px) and (min-width: 768px) {
+    .card {
+        flex: 0 0 calc(50% - 30px); /* For 2 columns */
     }
     
-    /* Add this new CSS for the offset effect - every second column */
-    .card-grid > .card:nth-child(3n+2) {
-        margin-top: 80px; /* Adjust this value for middle column offset */
+    /* Reset the 3-column transforms */
+    .card:nth-child(3n+2),
+    .card:nth-child(3n+3) {
+        transform: none;
     }
     
-    /* Third column with a different offset if desired */
-    .card-grid > .card:nth-child(3n+3) {
-        margin-top: 40px; /* Adjust this value for third column offset */
+    /* Apply 2-column staggering */
+    .card:nth-child(even) {
+        transform: translateY(50px);
     }
 }
 
-/* For two-column view on medium screens */
-@media (min-width: 768px) and (max-width: 991px) {
-    .card-grid {
-        grid-template-columns: repeat(2, 1fr);
+/* For mobile screens */
+@media (max-width: 767px) {
+    .card {
+        flex: 0 0 calc(100% - 30px); /* Single column */
     }
     
-    /* Offset every second card in two-column view */
-    .card-grid > .card:nth-child(even) {
-        margin-top: 60px;
+    /* Reset all transforms for mobile */
+    .card:nth-child(3n+2),
+    .card:nth-child(3n+3),
+    .card:nth-child(even) {
+        transform: none;
     }
 }
         
