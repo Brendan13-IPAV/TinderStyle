@@ -883,37 +883,39 @@ const filterQuestions = [
     {
         text: "Can you identify or contact the other party?",
         filterProperty: "Overtitle",
-        filterValue: ["letter of demand", "Informal contact", "IP attorney"],
+        filterValue: ["letter of demand", "Informal contact", "IP attorney","negotiate", "ASBFEO"],
         expectedAnswer: "Yes"
     },
     {
         text: "Would you prefer to avoid formal legal proceedings if possible?",
         filterProperty: "Overtitle",
-        filterValue: ["Court", "Interim court", "Arbitration", "Negotiation", "IP attorney"],
+        filterValue: ["Court", "Interim court", "Arbitration", "Negotiation"],
         expectedAnswer: "No"
     },
     {
         text: "Would you consider working with an IP professional on this issue?",
         filterProperty: "Overtitle",
-        filterValue: ["IP attorney", "IP assessment", "Finding an IP professional"],
+        filterValue: ["IP attorney", "IP assessment", "professional"],
         expectedAnswer: "Yes"
     },
     {
         text: "Does this dispute relate to a domain name?",
         filterProperty: "Overtitle",
-        filterValue: ["Domain Name Dispute", "UDRP", "WIPO"],
+        filterValue: ["Domain Name", "UDRP", "WIPO", "takedown"],
         expectedAnswer: "Yes"
     },
     {
         text: "Does the other party have a trade mark you have an issue with?",
         filterProperty: "Overtitle",
-        filterValue: ["Opposition", "Cease and desist", "trade mark"],
+        filterValue: ["Opposition", "Register", "trade mark", "revocation", "WIPO],
         expectedAnswer: "Yes"
     },
     {
         text: "Is there an ongoing relationship with the other party that is likely to continue?",
         filterProperty: "Context",
-        filterValue: ["Ongoing business relationship"],
+        filterValue: ["business relationship", "ngeotiation", "Mediation"],
+                filterProperty: "Resolution Approach",
+        filterValue: ["Negotiation", "Mediation"],
         expectedAnswer: "Yes"
     },
     {
@@ -925,7 +927,7 @@ const filterQuestions = [
     {
         text: "Is the trade mark application currently in its opposition and hearing period?",
         filterProperty: "Status",
-        filterValue: ["Opposition", "Hearing", "IP Australia decision"],
+        filterValue: ["Opposition", "Hearing", "IP Australia", "Revocation"],
         expectedAnswer: "Yes"
     },
     {
