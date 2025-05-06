@@ -229,51 +229,58 @@
             text-align: center;
         }
 
-/* Replace your current card-grid styling with this */
 .card-grid {
-    position: relative;
-    display: flex;
-    flex-wrap: wrap;
-    margin: -30px -15px; /* Negative margin to offset the padding we'll add to cards */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
 }
 
+/* Basic card styling remains the same */
 .card {
-    flex: 0 0 calc(33.333% - 30px); /* For 3 columns */
-    margin: 30px 15px;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(16, 24, 40, 0.1);
     padding: 24px;
+    margin-bottom: 20px;
     border-left: 3px solid var(--teal);
     transition: transform 0.5s ease, opacity 0.5s ease;
-    position: relative;
-    /* Remove any fixed height that might be present */
+    height: 100%; /* Ensure all cards have the same height behavior */
 }
 
-/* Apply staggered effect */
-.card:nth-child(3n+2) {
-    transform: translateY(40px);
+/* Create the staggered effect by shifting every other row */
+.card-grid > .card:nth-child(2),
+.card-grid > .card:nth-child(4),
+.card-grid > .card:nth-child(6),
+.card-grid > .card:nth-child(8) {
+    transform: translateY(60px);
 }
 
-.card:nth-child(3n+3) {
-    transform: translateY(80px);
-}
-
-/* For medium screens - 2 column layout */
+/* Responsive adjustments */
 @media (max-width: 991px) and (min-width: 768px) {
-    .card {
-        flex: 0 0 calc(50% - 30px); /* For 2 columns */
+    .card-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
     
     /* Reset the 3-column transforms */
-    .card:nth-child(3n+2),
-    .card:nth-child(3n+3) {
+    .card-grid > .card:nth-child(n) {
         transform: none;
     }
     
     /* Apply 2-column staggering */
-    .card:nth-child(even) {
-        transform: translateY(50px);
+    .card-grid > .card:nth-child(even) {
+        transform: translateY(40px);
+    }
+}
+
+@media (max-width: 767px) {
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Remove staggering on mobile */
+    .card-grid > .card:nth-child(n) {
+        transform: none;
     }
 }
 
